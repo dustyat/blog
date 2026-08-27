@@ -1,10 +1,13 @@
-/* 2026 Ultra-Minimalist Design System with Native GitHub Markdown Styles */
+/* Custom Minimalist Design System based on user's exact specification */
 
 :root {
+	--select-text-bg-color: #eeeeee;
+	--select-text-font-color: #767676;
+
 	--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 	--font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
-	/* GitHub Light Palette */
+	/* Light Mode Base */
 	--bg-color: #ffffff;
 	--bg-surface: #ffffff;
 	--card-bg: #ffffff;
@@ -12,33 +15,28 @@
 	--border-color: #d0d7de;
 	--border-subtle: #eaeef2;
 	--timeline-line: #d0d7de;
-	--text-color: #1f2328;
-	--text-muted: #656d76;
+	--text-color: #24292f;
+	--text-muted: #57606a;
 	--text-subtle: #8c959f;
 	
 	--accent: #0969da;
 	--accent-hover: #0550ae;
-	--accent-light: #ddf4ff;
 
-	/* GitHub Markdown Variables */
-	--gh-code-bg: rgba(175, 184, 193, 0.2);
-	--gh-pre-bg: #f6f8fa;
-	--gh-border: #d0d7de;
-	--gh-blockquote-border: #d0d7de;
-	--gh-table-header-bg: #f6f8fa;
-	--gh-table-zebra-bg: #f6f8fa;
-	--gh-hr-bg: #d8dee4;
+	/* User Specified Elements (Light) */
+	--inline-code-bg: #f9f2f4;
+	--inline-code-color: #c7254e;
+	--blockquote-bg: #E2F5FE;
+	--blockquote-border: #4aa3df;
+	--table-border: #333333;
 
-	--header-bg: rgba(255, 255, 255, 0.85);
-	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-	--radius-sm: 6px;
-	--radius-md: 8px;
-	--radius-lg: 12px;
+	--header-bg: rgba(255, 255, 255, 0.9);
+	--radius-sm: 4px;
+	--radius-md: 6px;
 	--radius-full: 9999px;
 }
 
 [data-theme="dark"] {
-	/* GitHub Dark Palette */
+	/* Dark Mode Base */
 	--bg-color: #0d1117;
 	--bg-surface: #0d1117;
 	--card-bg: #161b22;
@@ -46,25 +44,21 @@
 	--border-color: #30363d;
 	--border-subtle: #21262d;
 	--timeline-line: #30363d;
-	--text-color: #e6edf3;
-	--text-muted: #848d97;
+	--text-color: #c9d1d9;
+	--text-muted: #8b949e;
 	--text-subtle: #6e7681;
 
-	--accent: #2f81f7;
-	--accent-hover: #58a6ff;
-	--accent-light: rgba(56, 139, 253, 0.15);
+	--accent: #58a6ff;
+	--accent-hover: #79c0ff;
 
-	/* GitHub Dark Markdown Variables */
-	--gh-code-bg: rgba(110, 118, 129, 0.4);
-	--gh-pre-bg: #161b22;
-	--gh-border: #30363d;
-	--gh-blockquote-border: #30363d;
-	--gh-table-header-bg: #161b22;
-	--gh-table-zebra-bg: #161b22;
-	--gh-hr-bg: #21262d;
+	/* User Specified Elements (Dark) */
+	--inline-code-bg: #2d1822;
+	--inline-code-color: #ff7b92;
+	--blockquote-bg: #132337;
+	--blockquote-border: #1f6feb;
+	--table-border: #484f58;
 
-	--header-bg: rgba(13, 17, 23, 0.85);
-	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+	--header-bg: rgba(13, 17, 23, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -76,22 +70,23 @@
 		--border-color: #30363d;
 		--border-subtle: #21262d;
 		--timeline-line: #30363d;
-		--text-color: #e6edf3;
-		--text-muted: #848d97;
+		--text-color: #c9d1d9;
+		--text-muted: #8b949e;
 		--text-subtle: #6e7681;
-		--accent: #2f81f7;
-		--accent-hover: #58a6ff;
-		--accent-light: rgba(56, 139, 253, 0.15);
-		--gh-code-bg: rgba(110, 118, 129, 0.4);
-		--gh-pre-bg: #161b22;
-		--gh-border: #30363d;
-		--gh-blockquote-border: #30363d;
-		--gh-table-header-bg: #161b22;
-		--gh-table-zebra-bg: #161b22;
-		--gh-hr-bg: #21262d;
-		--header-bg: rgba(13, 17, 23, 0.85);
-		--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+		--accent: #58a6ff;
+		--accent-hover: #79c0ff;
+		--inline-code-bg: #2d1822;
+		--inline-code-color: #ff7b92;
+		--blockquote-bg: #132337;
+		--blockquote-border: #1f6feb;
+		--table-border: #484f58;
+		--header-bg: rgba(13, 17, 23, 0.9);
 	}
+}
+
+::selection {
+	background-color: var(--select-text-bg-color);
+	color: var(--select-text-font-color);
 }
 
 *, *::before, *::after {
@@ -110,28 +105,33 @@ body {
 	color: var(--text-color);
 	font-size: 16px;
 	line-height: 1.6;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	transition: background-color 0.2s ease, color 0.2s ease;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 }
 
 main {
-	width: 820px;
+	width: 800px;
 	max-width: calc(100% - 2.5rem);
 	margin: 0 auto;
 	padding: 2.5rem 0 5rem;
 	flex: 1;
 }
 
+/* Headings Specification */
 h1, h2, h3, h4, h5, h6 {
-	margin: 0 0 0.75rem 0;
+	line-height: 1.2;
+	font-weight: bold;
 	color: var(--text-color);
-	font-weight: 600;
-	line-height: 1.25;
+	margin: 1.5rem 0 0.8rem;
 }
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.75em; }
+h3 { font-size: 1.5em; }
+h4 { font-size: 1.25em; }
+h5 { font-size: 1em; }
+h6 { font-size: 1em; }
 
 a {
 	color: var(--accent);
@@ -143,7 +143,7 @@ a:hover {
 }
 
 p {
-	margin: 0 0 1rem;
+	margin: 0 0 1.2rem;
 	color: var(--text-color);
 }
 
@@ -154,193 +154,171 @@ img {
 	display: block;
 }
 
-/* ==========================================================================
-   GitHub Flavored Markdown (GFM) Pure Spec Styles
-   ========================================================================== */
+/* User Specified Inline Code */
+code {
+	font-family: var(--font-mono);
+	background-color: var(--inline-code-bg);
+	color: var(--inline-code-color);
+	font-size: 0.9em;
+	padding: 2px 5px;
+	border-radius: 3px;
+}
 
-.markdown-body, .prose {
-	font-family: var(--font-sans);
-	font-size: 16px;
-	line-height: 1.6;
-	word-wrap: break-word;
+/* User Specified Blockquote */
+blockquote {
+	background-color: var(--blockquote-bg);
+	border-left: 4px solid var(--blockquote-border);
+	margin: 1.5em 0;
+	padding: 0.8em 1.2em;
+	border-radius: 0 4px 4px 0;
 	color: var(--text-color);
 }
 
-.markdown-body h1, .prose h1 {
-	font-size: 2em;
-	padding-bottom: 0.3em;
-	border-bottom: 1px solid var(--gh-border);
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
+blockquote p:last-child {
+	margin-bottom: 0;
 }
 
-.markdown-body h2, .prose h2 {
-	font-size: 1.5em;
-	padding-bottom: 0.3em;
-	border-bottom: 1px solid var(--gh-border);
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.markdown-body h3, .prose h3 {
-	font-size: 1.25em;
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.markdown-body h4, .prose h4 {
-	font-size: 1em;
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.markdown-body h5, .prose h5 {
-	font-size: 0.875em;
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.markdown-body h6, .prose h6 {
-	font-size: 0.85em;
-	color: var(--text-muted);
-	margin-top: 24px;
-	margin-bottom: 16px;
-	font-weight: 600;
-	line-height: 1.25;
-}
-
-.markdown-body p, .prose p {
-	margin-top: 0;
-	margin-bottom: 16px;
-}
-
-.markdown-body blockquote, .prose blockquote {
-	margin: 0 0 16px;
-	padding: 0 1em;
-	color: var(--text-muted);
-	border-left: 0.25em solid var(--gh-blockquote-border);
-	background: transparent;
-}
-
-.markdown-body ul, .prose ul,
-.markdown-body ol, .prose ol {
-	margin-top: 0;
-	margin-bottom: 16px;
-	padding-left: 2em;
-}
-
-.markdown-body li + li, .prose li + li {
-	margin-top: 0.25em;
-}
-
-.markdown-body hr, .prose hr {
-	height: 0.25em;
-	padding: 0;
-	margin: 24px 0;
-	background-color: var(--gh-hr-bg);
-	border: 0;
-}
-
-/* GitHub Tables */
-.markdown-body table, .prose table {
-	border-spacing: 0;
+/* User Specified Table */
+table {
+	width: 100%;
 	border-collapse: collapse;
-	display: block;
-	width: max-content;
-	max-width: 100%;
-	overflow: auto;
-	margin-top: 0;
-	margin-bottom: 16px;
+	margin: 1.5em 0;
 }
 
-.markdown-body table th, .prose table th,
-.markdown-body table td, .prose table td {
-	padding: 6px 13px;
-	border: 1px solid var(--gh-border);
+th, tr, td {
+	border: 1px solid var(--table-border);
+	padding: 8px 12px;
+	text-align: left;
 }
 
-.markdown-body table th, .prose table th {
-	font-weight: 600;
-	background-color: var(--gh-table-header-bg);
+th {
+	font-weight: bold;
+	background-color: var(--card-hover);
 }
 
-.markdown-body table tr:nth-child(2n), .prose table tr:nth-child(2n) {
-	background-color: var(--gh-table-zebra-bg);
-}
-
-/* GitHub Code & Pre */
-.markdown-body code, .prose code {
-	font-family: var(--font-mono);
-	font-size: 85%;
-	padding: 0.2em 0.4em;
-	margin: 0;
-	background-color: var(--gh-code-bg);
-	border-radius: 6px;
-	border: none;
-	color: inherit;
-}
-
-.markdown-body pre, .prose pre {
+/* Pre Code Blocks (GitHub Dark highlight) */
+pre {
 	position: relative;
 	font-family: var(--font-mono);
-	font-size: 85%;
+	font-size: 0.9em;
 	line-height: 1.45;
 	padding: 16px;
 	overflow: auto;
 	border-radius: 6px;
-	border: 1px solid var(--gh-border);
-	background-color: var(--gh-pre-bg) !important;
-	margin-top: 0;
-	margin-bottom: 16px;
-	word-wrap: normal;
+	background-color: #0d1117 !important;
+	color: #c9d1d9 !important;
+	border: 1px solid var(--border-color);
+	margin: 1.5em 0;
 }
 
-.markdown-body pre code, .prose pre code {
-	display: inline;
-	max-width: auto;
-	padding: 0;
-	margin: 0;
-	overflow: visible;
-	line-height: inherit;
-	word-wrap: normal;
-	background-color: transparent;
-	border: 0;
+pre code {
+	all: unset;
+	font-family: var(--font-mono);
 	font-size: 100%;
-	white-space: pre;
+	color: inherit;
+	background-color: transparent !important;
 }
 
-/* Shiki Dual Theme Support */
-.astro-code, .astro-code span {
-	color: var(--shiki-light) !important;
-	background-color: var(--shiki-light-bg) !important;
-	font-style: var(--shiki-light-font-style) !important;
-	font-weight: var(--shiki-light-font-weight) !important;
-	text-decoration: var(--shiki-light-text-decoration) !important;
+/* GitHub Dark Syntax Highlighting */
+.hljs, .astro-code {
+	color: #c9d1d9 !important;
+	background-color: #0d1117 !important;
 }
 
-[data-theme="dark"] .astro-code,
-[data-theme="dark"] .astro-code span {
-	color: var(--shiki-dark) !important;
-	background-color: var(--shiki-dark-bg) !important;
-	font-style: var(--shiki-dark-font-style) !important;
-	font-weight: var(--shiki-dark-font-weight) !important;
-	text-decoration: var(--shiki-dark-text-decoration) !important;
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+	color: #ff7b72 !important;
 }
 
-/* GitHub Task Lists */
-.markdown-body input[type="checkbox"], .prose input[type="checkbox"] {
-	margin: 0 0.2em 0.25em -1.4em;
-	vertical-align: middle;
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+	color: #d2a8ff !important;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+	color: #79c0ff !important;
+}
+
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+	color: #a5d6ff !important;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+	color: #ffa657 !important;
+}
+
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+	color: #8b949e !important;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+	color: #7ee787 !important;
+}
+
+.hljs-subst {
+	color: #c9d1d9 !important;
+}
+
+.hljs-section {
+	color: #1f6feb !important;
+	font-weight: bold;
+}
+
+.hljs-bullet {
+	color: #f2cc60 !important;
+}
+
+.hljs-emphasis {
+	color: #c9d1d9 !important;
+	font-style: italic;
+}
+
+.hljs-strong {
+	color: #c9d1d9 !important;
+	font-weight: bold;
+}
+
+.hljs-addition {
+	color: #aff5b4 !important;
+	background-color: #033a16 !important;
+}
+
+.hljs-deletion {
+	color: #ffdcd7 !important;
+	background-color: #67060c !important;
+}
+
+.hljs-char.escape_,
+.hljs-link,
+.hljs-params,
+.hljs-property,
+.hljs-punctuation,
+.hljs-tag {
+	color: #e2ca1a !important;
 }
 
 .sr-only {
