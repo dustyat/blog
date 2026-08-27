@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  GCP_REGION: asia-east1                    # 可按需修改（如 asia-northeast1 东京, us-central1 等）
+  GCP_REGION: asia-southeast1                # 新加坡（越南及东南亚超低延迟，直连海缆）
   GAR_REPOSITORY: blog-repo                 # GCP Artifact Registry 仓库名称
   SERVICE_NAME: astro-blog                  # Cloud Run 服务名称
 
