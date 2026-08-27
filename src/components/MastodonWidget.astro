@@ -49,15 +49,9 @@ const {
 
 		<!-- Action Link -->
 		<div class="card-action-bar">
-			{tootId ? (
-				<a href={`https://${host}/@${username}/${tootId}`} target="_blank" rel="noopener noreferrer" class="cta-button">
-					<span>在 Mastodon 上回复本篇文章 ➔</span>
-				</a>
-			) : (
-				<a href={`https://${host}/@${username}`} target="_blank" rel="noopener noreferrer" class="cta-button">
-					<span>前往博主 Mastodon 主页互动 ➔</span>
-				</a>
-			)}
+			<a id="mastodon-cta-btn" href={tootId ? `https://${host}/@${username}/${tootId}` : `https://${host}/@${username}`} target="_blank" rel="noopener noreferrer" class="cta-button">
+				<span>在 Mastodon 上回复本篇文章 ➔</span>
+			</a>
 		</div>
 
 		<!-- Comments Scroll Area -->
@@ -308,6 +302,7 @@ const {
 	const card = document.getElementById('mastodon-card');
 	const closeBtn = document.getElementById('card-close-btn');
 	const container = document.getElementById('card-comments-body');
+	const ctaBtn = document.getElementById('mastodon-cta-btn');
 	const wrapper = document.querySelector('.mastodon-widget-wrapper');
 
 	let isOpen = false;
@@ -344,12 +339,32 @@ const {
 
 		const host = wrapper.getAttribute('data-host') || 'mastodon.social';
 		const username = wrapper.getAttribute('data-username') || '';
-		const tootId = wrapper.getAttribute('data-toot-id');
+		let tootId = wrapper.getAttribute('data-toot-id');
+
+		// 如果文章未硬编码 tootId，自动通过当前页面 URL 检索 Mastodon 对应嘟文
+		if (!tootId) {
+			try {
+				const currentPath = window.location.pathname;
+				const searchRes = await fetch(`https://${host}/api/v2/search?q=${encodeURIComponent(currentPath)}&type=statuses&resolve=true`);
+				if (searchRes.ok) {
+					const searchData = await searchRes.json();
+					const foundToot = searchData.statuses?.find((s: any) => s.account.username.toLowerCase() === username.toLowerCase());
+					if (foundToot) {
+						tootId = foundToot.id;
+						if (ctaBtn) {
+							ctaBtn.setAttribute('href', foundToot.url);
+						}
+					}
+				}
+			} catch (e) {
+				console.log('Auto-resolve toot failed, falling back to manual mode');
+			}
+		}
 
 		if (!tootId) {
 			container.innerHTML = `
 				<div class="card-empty-note">
-					<p>💬 本篇文章尚未绑定指定嘟文 ID。</p>
+					<p>💬 本篇文章尚未在 Mastodon 发起讨论。</p>
 					<p>欢迎前往博主 Mastodon 主页 <strong>@${username}@${host}</strong> 互动或关注！</p>
 				</div>
 			`;
