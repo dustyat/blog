@@ -11,76 +11,257 @@ type Props = CollectionEntry<'blog'>['data'];
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
-<html lang="en">
+<!doctype html>
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
+		<!-- Reading Progress Bar -->
+		<div id="progress-bar" class="progress-bar"></div>
+
 		<Header />
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+			<article class="article-container">
+				<!-- Navigation Back -->
+				<div class="back-nav">
+					<a href="/blog" class="back-link">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="m15 18-6-6 6-6"/>
+						</svg>
+						返回文章列表
+					</a>
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
+
+				<!-- Article Header -->
+				<header class="article-header">
+					<div class="article-meta">
+						<span class="meta-item">
 							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+						</span>
+						{
+							updatedDate && (
+								<span class="meta-item updated">
+									(更新于 <FormattedDate date={updatedDate} />)
+								</span>
+							)
+						}
 					</div>
+					<h1 class="article-title">{title}</h1>
+					{description && <p class="article-desc">{description}</p>}
+				</header>
+
+				<!-- Hero Image (if available) -->
+				{
+					heroImage && (
+						<div class="hero-image-wrapper">
+							<Image width={1020} height={510} src={heroImage} alt={title} class="hero-img" />
+						</div>
+					)
+				}
+
+				<!-- Article Content -->
+				<div class="prose content-body">
 					<slot />
+				</div>
+
+				<!-- Article Footer / Author Note -->
+				<div class="article-author-card">
+					<div class="author-avatar">✍️</div>
+					<div class="author-info">
+						<h4>感谢阅读</h4>
+						<p>本文采用 Markdown 编写，如果您觉得有启发或有任何想法，欢迎通过 GitHub 或社交平台交流讨论。</p>
+					</div>
 				</div>
 			</article>
 		</main>
 		<Footer />
+
+		<script>
+			// Reading Progress Bar
+			window.addEventListener('scroll', () => {
+				const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+				const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+				const scrolled = (winScroll / height) * 100;
+				const bar = document.getElementById('progress-bar');
+				if (bar) bar.style.width = scrolled + '%';
+			});
+
+			// Code Block Copy Button
+			document.querySelectorAll('pre').forEach((pre) => {
+				const button = document.createElement('button');
+				button.className = 'copy-code-btn';
+				button.innerText = 'Copy';
+				button.addEventListener('click', async () => {
+					const code = pre.querySelector('code')?.innerText || pre.innerText;
+					await navigator.clipboard.writeText(code);
+					button.innerText = 'Copied!';
+					setTimeout(() => {
+						button.innerText = 'Copy';
+					}, 2000);
+				});
+				pre.appendChild(button);
+			});
+		</script>
 	</body>
 </html>
+
+<style>
+	.progress-bar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 3px;
+		background: linear-gradient(90deg, var(--accent), #a855f7);
+		width: 0%;
+		z-index: 100;
+		transition: width 0.1s ease-out;
+	}
+
+	.article-container {
+		max-width: 760px;
+		margin: 0 auto;
+	}
+
+	.back-nav {
+		margin-bottom: 2rem;
+	}
+
+	.back-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: var(--text-muted);
+		padding: 0.35rem 0.75rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-full);
+		transition: all 0.2s ease;
+	}
+
+	.back-link:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		transform: translateX(-2px);
+	}
+
+	.article-header {
+		margin-bottom: 2.5rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.article-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		margin-bottom: 0.75rem;
+	}
+
+	.article-title {
+		font-size: 2.5rem;
+		font-weight: 800;
+		letter-spacing: -0.035em;
+		line-height: 1.2;
+		margin: 0 0 1rem 0;
+	}
+
+	.article-desc {
+		font-size: 1.15rem;
+		color: var(--text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	.hero-image-wrapper {
+		margin: 2rem 0 3rem;
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		border: 1px solid var(--border-color);
+		box-shadow: var(--shadow-md);
+	}
+
+	.hero-img {
+		width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.content-body {
+		margin-bottom: 3.5rem;
+	}
+
+	.article-author-card {
+		display: flex;
+		align-items: center;
+		gap: 1.25rem;
+		padding: 1.5rem 1.75rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-lg);
+		margin-top: 3rem;
+		box-shadow: var(--shadow-sm);
+	}
+
+	.author-avatar {
+		font-size: 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		background: var(--card-hover);
+		border-radius: 50%;
+	}
+
+	.author-info h4 {
+		margin: 0 0 0.35rem 0;
+		font-size: 1rem;
+	}
+
+	.author-info p {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	:global(.copy-code-btn) {
+		position: absolute;
+		top: 0.6rem;
+		right: 0.6rem;
+		padding: 0.25rem 0.55rem;
+		font-size: 0.75rem;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		background: rgba(255, 255, 255, 0.1);
+		color: #e4e4e7;
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 6px;
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 0.2s ease, background-color 0.2s ease;
+	}
+
+	:global(pre:hover .copy-code-btn) {
+		opacity: 1;
+	}
+
+	:global(.copy-code-btn:hover) {
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	@media (max-width: 640px) {
+		.article-title {
+			font-size: 1.85rem;
+		}
+		.article-desc {
+			font-size: 1rem;
+		}
+	}
+</style>

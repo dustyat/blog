@@ -1,11 +1,10 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -13,102 +12,164 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={`所有文章 · ${SITE_TITLE}`} description="浏览所有技术文章与随笔" />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
+			<header class="page-header">
+				<div class="header-badge">Writing</div>
+				<h1 class="page-title">文章归档</h1>
+				<p class="page-desc">共有 {posts.length} 篇思考、架构设计与技术笔记。</p>
+			</header>
+
+			<section class="posts-container">
+				<div class="posts-list">
+					{posts.map((post) => (
+						<article class="post-item">
+							<a href={`/blog/${post.id}/`} class="post-link">
+								<div class="post-content">
+									<div class="post-meta">
 										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
+										<span class="meta-dot">·</span>
+										<span class="meta-tag">Post</span>
+									</div>
+									<h2 class="post-heading">{post.data.title}</h2>
+									<p class="post-summary">{post.data.description}</p>
+								</div>
+								<div class="post-action">
+									<span class="read-btn">阅读全文 →</span>
+								</div>
+							</a>
+						</article>
+					))}
+				</div>
 			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.page-header {
+		padding: 1.5rem 0 2.5rem;
+		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 2rem;
+	}
+
+	.header-badge {
+		display: inline-block;
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--accent);
+		margin-bottom: 0.5rem;
+	}
+
+	.page-title {
+		font-size: 2.25rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin: 0 0 0.5rem 0;
+	}
+
+	.page-desc {
+		font-size: 1.05rem;
+		color: var(--text-muted);
+		margin: 0;
+	}
+
+	.posts-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+	}
+
+	.post-item {
+		border: 1px solid var(--border-color);
+		background: var(--card-bg);
+		border-radius: var(--radius-lg);
+		transition: all 0.25s ease;
+	}
+
+	.post-item:hover {
+		border-color: var(--accent);
+		background: var(--card-hover);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.post-link {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 1.5rem 1.75rem;
+		text-decoration: none;
+		height: 100%;
+		gap: 1rem;
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		font-size: 0.8rem;
+		color: var(--text-subtle);
+		margin-bottom: 0.5rem;
+	}
+
+	.meta-tag {
+		color: var(--accent);
+		font-weight: 600;
+	}
+
+	.post-heading {
+		font-size: 1.35rem;
+		font-weight: 700;
+		color: var(--text-color);
+		margin: 0 0 0.5rem 0;
+		transition: color 0.2s ease;
+	}
+
+	.post-link:hover .post-heading {
+		color: var(--accent);
+	}
+
+	.post-summary {
+		font-size: 0.95rem;
+		color: var(--text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	.post-action {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		border-top: 1px solid var(--border-subtle);
+		padding-top: 0.75rem;
+	}
+
+	.read-btn {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--accent);
+		transition: transform 0.2s ease;
+	}
+
+	.post-link:hover .read-btn {
+		transform: translateX(3px);
+	}
+
+	@media (max-width: 640px) {
+		.page-title {
+			font-size: 1.85rem;
+		}
+		.post-link {
+			padding: 1.25rem;
+		}
+	}
+</style>

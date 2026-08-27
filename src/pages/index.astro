@@ -1,49 +1,358 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 4);
+
+const topics = ['Cloud Run', 'Astro', 'Docker', 'CI/CD', '全栈开发', '架构设计', '自动化运维'];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<!-- Hero Section -->
+			<section class="hero-section">
+				<div class="hero-badge">
+					<span class="pulse-dot"></span>
+					<span>2026 Tech & Notes · Continuous Delivery</span>
+				</div>
+				<h1 class="hero-title">
+					保持好奇，探索技术与数字化的无限可能。
+				</h1>
+				<p class="hero-desc">
+					欢迎来到我的个人博客。这里记录关于现代 Web 架构、云原生实践与技术思考。
+					全站基于 <strong>Astro</strong> 构建，通过 <strong>GitHub Actions</strong> 实现全自动化持续交付至 <strong>Google Cloud Run</strong>。
+				</p>
+				<div class="hero-actions">
+					<a href="/blog" class="btn btn-primary">
+						<span>浏览所有文章</span>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M5 12h14"></path>
+							<path d="m12 5 7 7-7 7"></path>
+						</svg>
+					</a>
+					<a href="/about" class="btn btn-secondary">关于本站</a>
+				</div>
+			</section>
+
+			<!-- Topics Cloud -->
+			<section class="topics-section">
+				<div class="topics-list">
+					{topics.map((topic) => (
+						<span class="topic-tag">#{topic}</span>
+					))}
+				</div>
+			</section>
+
+			<!-- Recent Posts -->
+			<section class="posts-section">
+				<div class="section-header">
+					<h2 class="section-title">最新文章</h2>
+					<a href="/blog" class="section-more">
+						查看全部 ({posts.length}+)
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M5 12h14"></path>
+							<path d="m12 5 7 7-7 7"></path>
+						</svg>
+					</a>
+				</div>
+
+				<div class="posts-list">
+					{posts.map((post) => (
+						<a href={`/blog/${post.id}/`} class="post-card">
+							<div class="post-info">
+								<h3 class="post-title">{post.data.title}</h3>
+								<p class="post-desc">{post.data.description}</p>
+								<div class="post-meta">
+									<FormattedDate date={post.data.pubDate} />
+									<span class="meta-dot">·</span>
+									<span>Markdown</span>
+								</div>
+							</div>
+							<div class="post-arrow">
+								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M5 12h14"></path>
+									<path d="m12 5 7 7-7 7"></path>
+								</svg>
+							</div>
+						</a>
+					))}
+				</div>
+			</section>
+
+			<!-- Feature Card / Workflow Callout -->
+			<section class="callout-section">
+				<div class="callout-card">
+					<div class="callout-icon">⚡</div>
+					<div class="callout-content">
+						<h3>现代极简架构流程</h3>
+						<p>本地 Markdown 撰写 ➔ Git Push 触发 ➔ GitHub Actions 云端打包 ➔ 零秒缩容部署至 Google Cloud Run。</p>
+					</div>
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.hero-section {
+		padding: 2.5rem 0 3rem;
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.hero-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.35rem 0.85rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-full);
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: var(--text-muted);
+		margin-bottom: 1.5rem;
+		box-shadow: var(--shadow-sm);
+	}
+
+	.pulse-dot {
+		width: 6px;
+		height: 6px;
+		background: var(--accent);
+		border-radius: 50%;
+		box-shadow: 0 0 8px var(--accent);
+	}
+
+	.hero-title {
+		font-size: 2.75rem;
+		font-weight: 800;
+		letter-spacing: -0.035em;
+		line-height: 1.2;
+		margin-bottom: 1.25rem;
+	}
+
+	.hero-desc {
+		font-size: 1.15rem;
+		color: var(--text-muted);
+		line-height: 1.7;
+		max-width: 680px;
+		margin-bottom: 2rem;
+	}
+
+	.hero-desc strong {
+		color: var(--text-color);
+	}
+
+	.hero-actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.65rem 1.35rem;
+		border-radius: var(--radius-md);
+		font-size: 0.95rem;
+		font-weight: 600;
+		transition: all 0.2s ease;
+		text-decoration: none;
+	}
+
+	.btn-primary {
+		background: var(--accent);
+		color: #ffffff;
+		box-shadow: 0 4px 14px var(--accent-glow);
+	}
+
+	.btn-primary:hover {
+		background: var(--accent-hover);
+		color: #ffffff;
+		transform: translateY(-1px);
+	}
+
+	.btn-secondary {
+		background: var(--card-bg);
+		color: var(--text-color);
+		border: 1px solid var(--border-color);
+	}
+
+	.btn-secondary:hover {
+		background: var(--card-hover);
+		border-color: var(--text-muted);
+	}
+
+	.topics-section {
+		padding: 1.5rem 0;
+	}
+
+	.topics-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.topic-tag {
+		font-size: 0.8rem;
+		padding: 0.25rem 0.65rem;
+		background: var(--card-hover);
+		color: var(--text-muted);
+		border-radius: var(--radius-full);
+		border: 1px solid var(--border-color);
+	}
+
+	.posts-section {
+		margin-top: 2.5rem;
+	}
+
+	.section-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1.25rem;
+	}
+
+	.section-title {
+		font-size: 1.4rem;
+		font-weight: 700;
+		margin: 0;
+	}
+
+	.section-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.875rem;
+		color: var(--text-muted);
+	}
+
+	.section-more:hover {
+		color: var(--accent);
+	}
+
+	.posts-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.post-card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1.25rem 1.4rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-md);
+		transition: all 0.25s ease;
+		text-decoration: none;
+	}
+
+	.post-card:hover {
+		border-color: var(--accent);
+		background: var(--card-hover);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.post-info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.post-title {
+		font-size: 1.15rem;
+		font-weight: 600;
+		margin: 0;
+		color: var(--text-color);
+		transition: color 0.2s;
+	}
+
+	.post-card:hover .post-title {
+		color: var(--accent);
+	}
+
+	.post-desc {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	.post-meta {
+		font-size: 0.775rem;
+		color: var(--text-subtle);
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		margin-top: 0.25rem;
+	}
+
+	.post-arrow {
+		color: var(--text-subtle);
+		transition: transform 0.2s ease, color 0.2s ease;
+		padding-left: 1rem;
+	}
+
+	.post-card:hover .post-arrow {
+		color: var(--accent);
+		transform: translateX(4px);
+	}
+
+	.callout-section {
+		margin-top: 3.5rem;
+	}
+
+	.callout-card {
+		display: flex;
+		align-items: flex-start;
+		gap: 1.25rem;
+		padding: 1.5rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-lg);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.callout-icon {
+		font-size: 1.8rem;
+		line-height: 1;
+	}
+
+	.callout-content h3 {
+		font-size: 1.05rem;
+		margin: 0 0 0.4rem 0;
+	}
+
+	.callout-content p {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 640px) {
+		.hero-title {
+			font-size: 2rem;
+		}
+		.hero-desc {
+			font-size: 1rem;
+		}
+	}
+</style>
