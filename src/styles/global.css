@@ -1,72 +1,95 @@
-/* 2026 Ultra-Minimalist Design System */
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* 2026 Ultra-Minimalist Design System with Native GitHub Markdown Styles */
 
 :root {
-	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-	--font-mono: 'JetBrains Mono', ui-monospace, monospace;
+	--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+	--font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
-	/* Ultra-clean Light Mode */
+	/* GitHub Light Palette */
 	--bg-color: #ffffff;
 	--bg-surface: #ffffff;
 	--card-bg: #ffffff;
-	--card-hover: #f9fafb;
-	--border-color: #e5e7eb;
-	--border-subtle: #f3f4f6;
-	--timeline-line: #e5e7eb;
-	--text-color: #111827;
-	--text-muted: #6b7280;
-	--text-subtle: #9ca3af;
+	--card-hover: #f6f8fa;
+	--border-color: #d0d7de;
+	--border-subtle: #eaeef2;
+	--timeline-line: #d0d7de;
+	--text-color: #1f2328;
+	--text-muted: #656d76;
+	--text-subtle: #8c959f;
 	
-	--accent: #2563eb;
-	--accent-hover: #1d4ed8;
-	--accent-light: #eff6ff;
+	--accent: #0969da;
+	--accent-hover: #0550ae;
+	--accent-light: #ddf4ff;
 
-	--header-bg: rgba(255, 255, 255, 0.9);
-	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+	/* GitHub Markdown Variables */
+	--gh-code-bg: rgba(175, 184, 193, 0.2);
+	--gh-pre-bg: #f6f8fa;
+	--gh-border: #d0d7de;
+	--gh-blockquote-border: #d0d7de;
+	--gh-table-header-bg: #f6f8fa;
+	--gh-table-zebra-bg: #f6f8fa;
+	--gh-hr-bg: #d8dee4;
+
+	--header-bg: rgba(255, 255, 255, 0.85);
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 	--radius-sm: 6px;
-	--radius-md: 10px;
-	--radius-lg: 14px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
 	--radius-full: 9999px;
 }
 
 [data-theme="dark"] {
-	/* Ultra-clean Dark Mode */
-	--bg-color: #0c0c0e;
-	--bg-surface: #0c0c0e;
-	--card-bg: #131316;
-	--card-hover: #19191d;
-	--border-color: #222227;
-	--border-subtle: #18181c;
-	--timeline-line: #27272e;
-	--text-color: #f3f4f6;
-	--text-muted: #9ca3af;
-	--text-subtle: #6b7280;
+	/* GitHub Dark Palette */
+	--bg-color: #0d1117;
+	--bg-surface: #0d1117;
+	--card-bg: #161b22;
+	--card-hover: #1f242c;
+	--border-color: #30363d;
+	--border-subtle: #21262d;
+	--timeline-line: #30363d;
+	--text-color: #e6edf3;
+	--text-muted: #848d97;
+	--text-subtle: #6e7681;
 
-	--accent: #3b82f6;
-	--accent-hover: #60a5fa;
-	--accent-light: rgba(59, 130, 246, 0.12);
+	--accent: #2f81f7;
+	--accent-hover: #58a6ff;
+	--accent-light: rgba(56, 139, 253, 0.15);
 
-	--header-bg: rgba(12, 12, 14, 0.9);
+	/* GitHub Dark Markdown Variables */
+	--gh-code-bg: rgba(110, 118, 129, 0.4);
+	--gh-pre-bg: #161b22;
+	--gh-border: #30363d;
+	--gh-blockquote-border: #30363d;
+	--gh-table-header-bg: #161b22;
+	--gh-table-zebra-bg: #161b22;
+	--gh-hr-bg: #21262d;
+
+	--header-bg: rgba(13, 17, 23, 0.85);
 	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme="light"]) {
-		--bg-color: #0c0c0e;
-		--bg-surface: #0c0c0e;
-		--card-bg: #131316;
-		--card-hover: #19191d;
-		--border-color: #222227;
-		--border-subtle: #18181c;
-		--timeline-line: #27272e;
-		--text-color: #f3f4f6;
-		--text-muted: #9ca3af;
-		--text-subtle: #6b7280;
-		--accent: #3b82f6;
-		--accent-hover: #60a5fa;
-		--accent-light: rgba(59, 130, 246, 0.12);
-		--header-bg: rgba(12, 12, 14, 0.9);
+		--bg-color: #0d1117;
+		--bg-surface: #0d1117;
+		--card-bg: #161b22;
+		--card-hover: #1f242c;
+		--border-color: #30363d;
+		--border-subtle: #21262d;
+		--timeline-line: #30363d;
+		--text-color: #e6edf3;
+		--text-muted: #848d97;
+		--text-subtle: #6e7681;
+		--accent: #2f81f7;
+		--accent-hover: #58a6ff;
+		--accent-light: rgba(56, 139, 253, 0.15);
+		--gh-code-bg: rgba(110, 118, 129, 0.4);
+		--gh-pre-bg: #161b22;
+		--gh-border: #30363d;
+		--gh-blockquote-border: #30363d;
+		--gh-table-header-bg: #161b22;
+		--gh-table-zebra-bg: #161b22;
+		--gh-hr-bg: #21262d;
+		--header-bg: rgba(13, 17, 23, 0.85);
 		--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
 	}
 }
@@ -86,7 +109,7 @@ body {
 	background-color: var(--bg-color);
 	color: var(--text-color);
 	font-size: 16px;
-	line-height: 1.7;
+	line-height: 1.6;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	transition: background-color 0.2s ease, color 0.2s ease;
@@ -96,148 +119,228 @@ body {
 }
 
 main {
-	width: 760px;
+	width: 820px;
 	max-width: calc(100% - 2.5rem);
 	margin: 0 auto;
-	padding: 3rem 0 5rem;
+	padding: 2.5rem 0 5rem;
 	flex: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
 	margin: 0 0 0.75rem 0;
 	color: var(--text-color);
-	font-weight: 700;
-	line-height: 1.3;
-	letter-spacing: -0.02em;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-h1 { font-size: 2.1rem; }
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.25rem; }
-h4 { font-size: 1.05rem; }
-
 a {
-	color: inherit;
+	color: var(--accent);
 	text-decoration: none;
-	transition: color 0.15s ease;
 }
 
 a:hover {
-	color: var(--accent);
+	text-decoration: underline;
 }
 
 p {
-	margin: 0 0 1.25rem;
+	margin: 0 0 1rem;
 	color: var(--text-color);
 }
 
 img {
 	max-width: 100%;
 	height: auto;
-	border-radius: var(--radius-md);
+	border-radius: var(--radius-sm);
 	display: block;
 }
 
-/* Article Prose Typography */
-.prose {
+/* ==========================================================================
+   GitHub Flavored Markdown (GFM) Pure Spec Styles
+   ========================================================================== */
+
+.markdown-body, .prose {
+	font-family: var(--font-sans);
+	font-size: 16px;
+	line-height: 1.6;
+	word-wrap: break-word;
 	color: var(--text-color);
-	font-size: 1.05rem;
-	line-height: 1.85;
 }
 
-.prose p {
-	margin-bottom: 1.6rem;
+.markdown-body h1, .prose h1 {
+	font-size: 2em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid var(--gh-border);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-.prose h2 {
-	margin-top: 2.5rem;
-	margin-bottom: 1rem;
-	padding-bottom: 0.5rem;
-	border-bottom: 1px solid var(--border-color);
+.markdown-body h2, .prose h2 {
+	font-size: 1.5em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid var(--gh-border);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-.prose h3 {
-	margin-top: 2rem;
-	margin-bottom: 0.75rem;
+.markdown-body h3, .prose h3 {
+	font-size: 1.25em;
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-.prose a {
-	color: var(--accent);
-	text-decoration: underline;
-	text-underline-offset: 3px;
+.markdown-body h4, .prose h4 {
+	font-size: 1em;
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-.prose ul, .prose ol {
-	padding-left: 1.5rem;
-	margin-bottom: 1.6rem;
-}
-
-.prose li {
-	margin-bottom: 0.5rem;
-}
-
-.prose blockquote {
-	margin: 1.8rem 0;
-	padding: 1rem 1.4rem;
-	border-left: 3px solid var(--accent);
-	background: var(--card-bg);
-	border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-	color: var(--text-muted);
-	font-style: italic;
-}
-
-.prose code {
-	font-family: var(--font-mono);
+.markdown-body h5, .prose h5 {
 	font-size: 0.875em;
-	padding: 0.2em 0.4em;
-	border-radius: 4px;
-	background: var(--border-subtle);
-	border: 1px solid var(--border-color);
-	color: var(--accent);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
 }
 
-.prose pre {
+.markdown-body h6, .prose h6 {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	margin-top: 24px;
+	margin-bottom: 16px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+.markdown-body p, .prose p {
+	margin-top: 0;
+	margin-bottom: 16px;
+}
+
+.markdown-body blockquote, .prose blockquote {
+	margin: 0 0 16px;
+	padding: 0 1em;
+	color: var(--text-muted);
+	border-left: 0.25em solid var(--gh-blockquote-border);
+	background: transparent;
+}
+
+.markdown-body ul, .prose ul,
+.markdown-body ol, .prose ol {
+	margin-top: 0;
+	margin-bottom: 16px;
+	padding-left: 2em;
+}
+
+.markdown-body li + li, .prose li + li {
+	margin-top: 0.25em;
+}
+
+.markdown-body hr, .prose hr {
+	height: 0.25em;
+	padding: 0;
+	margin: 24px 0;
+	background-color: var(--gh-hr-bg);
+	border: 0;
+}
+
+/* GitHub Tables */
+.markdown-body table, .prose table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	display: block;
+	width: max-content;
+	max-width: 100%;
+	overflow: auto;
+	margin-top: 0;
+	margin-bottom: 16px;
+}
+
+.markdown-body table th, .prose table th,
+.markdown-body table td, .prose table td {
+	padding: 6px 13px;
+	border: 1px solid var(--gh-border);
+}
+
+.markdown-body table th, .prose table th {
+	font-weight: 600;
+	background-color: var(--gh-table-header-bg);
+}
+
+.markdown-body table tr:nth-child(2n), .prose table tr:nth-child(2n) {
+	background-color: var(--gh-table-zebra-bg);
+}
+
+/* GitHub Code & Pre */
+.markdown-body code, .prose code {
+	font-family: var(--font-mono);
+	font-size: 85%;
+	padding: 0.2em 0.4em;
+	margin: 0;
+	background-color: var(--gh-code-bg);
+	border-radius: 6px;
+	border: none;
+	color: inherit;
+}
+
+.markdown-body pre, .prose pre {
 	position: relative;
 	font-family: var(--font-mono);
-	font-size: 0.9rem;
-	padding: 1.25rem 1.5rem;
-	border-radius: var(--radius-md);
-	background: #18181b !important;
-	color: #f4f4f5 !important;
-	border: 1px solid var(--border-color);
-	overflow-x: auto;
-	margin: 1.8rem 0;
-	line-height: 1.6;
+	font-size: 85%;
+	line-height: 1.45;
+	padding: 16px;
+	overflow: auto;
+	border-radius: 6px;
+	border: 1px solid var(--gh-border);
+	background-color: var(--gh-pre-bg) !important;
+	margin-top: 0;
+	margin-bottom: 16px;
+	word-wrap: normal;
 }
 
-.prose pre code {
-	all: unset;
-	font-family: var(--font-mono);
-}
-
-.prose table {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 1.8rem 0;
-	font-size: 0.95rem;
-}
-
-.prose th, .prose td {
-	padding: 0.75rem 1rem;
-	border-bottom: 1px solid var(--border-color);
-	text-align: left;
-}
-
-.prose th {
-	font-weight: 600;
-	background: var(--border-subtle);
-}
-
-.prose hr {
+.markdown-body pre code, .prose pre code {
+	display: inline;
+	max-width: auto;
+	padding: 0;
+	margin: 0;
+	overflow: visible;
+	line-height: inherit;
+	word-wrap: normal;
+	background-color: transparent;
 	border: 0;
-	height: 1px;
-	background: var(--border-color);
-	margin: 2.5rem 0;
+	font-size: 100%;
+	white-space: pre;
+}
+
+/* Shiki Dual Theme Support */
+.astro-code, .astro-code span {
+	color: var(--shiki-light) !important;
+	background-color: var(--shiki-light-bg) !important;
+	font-style: var(--shiki-light-font-style) !important;
+	font-weight: var(--shiki-light-font-weight) !important;
+	text-decoration: var(--shiki-light-text-decoration) !important;
+}
+
+[data-theme="dark"] .astro-code,
+[data-theme="dark"] .astro-code span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+	font-style: var(--shiki-dark-font-style) !important;
+	font-weight: var(--shiki-dark-font-weight) !important;
+	text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+/* GitHub Task Lists */
+.markdown-body input[type="checkbox"], .prose input[type="checkbox"] {
+	margin: 0 0.2em 0.25em -1.4em;
+	vertical-align: middle;
 }
 
 .sr-only {
