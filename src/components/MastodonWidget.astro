@@ -15,14 +15,11 @@ const {
 ---
 
 <div class="mastodon-widget-wrapper" data-host={host} data-username={username} data-toot-id={tootId}>
-	<!-- 1. Peeking Tab: 底部边缘“露出一半”的萌宠感挂件 -->
+	<!-- 1. Pure Mastodon Icon Peeking Tab: 无背景、无文字、纯图标露出一半 -->
 	<button id="mastodon-tab" class="mastodon-peeking-tab" aria-label="展开 Mastodon 留言讨论卡片" title="Mastodon 留言互动">
-		<div class="tab-content">
-			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="tab-icon">
-				<path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.244 15.54.024 13.525.007h-.05C11.42.024 9.45.244 8.304.309 5.617.703 3.35 2.735 3 5.313c-.002.05-.01.127-.01.21-.082 3.37-.09 6.74.02 10.11.16 2.66 1.48 5.25 4.09 6.28 2.01.78 4.21.91 6.36.78 1.47-.09 2.93-.36 4.34-.81l-.09-2.02c-1.42.43-2.89.65-4.36.65-2.18 0-4.36-.5-4.88-2.68a5.1 5.1 0 0 1-.06-.82c1.78.44 3.61.66 5.45.66 1.34 0 2.68-.12 4-.35 3.19-.55 5.25-2.88 5.43-6.07.01-.17.02-.34.02-.51.01-1.83.01-3.66.004-5.49zm-4.7 6.497h-2.5v-5.2c0-1.1-.46-1.65-1.39-1.65-1.02 0-1.54.66-1.54 1.97v2.85h-2.27v-2.85c0-1.31-.52-1.97-1.54-1.97-.93 0-1.39.55-1.39 1.65v5.2H5.43v-5.4c0-1.1.28-1.97.84-2.62.58-.64 1.34-.98 2.29-.98 1.09 0 1.92.42 2.47 1.26l.57.97.57-.97c.55-.84 1.38-1.26 2.47-1.26.95 0 1.71.34 2.29.98.56.65.84 1.52.84 2.62v5.4z"/>
-			</svg>
-			<span class="tab-label">💬 留言</span>
-		</div>
+		<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#6364ff" class="pure-mastodon-icon">
+			<path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.244 15.54.024 13.525.007h-.05C11.42.024 9.45.244 8.304.309 5.617.703 3.35 2.735 3 5.313c-.002.05-.01.127-.01.21-.082 3.37-.09 6.74.02 10.11.16 2.66 1.48 5.25 4.09 6.28 2.01.78 4.21.91 6.36.78 1.47-.09 2.93-.36 4.34-.81l-.09-2.02c-1.42.43-2.89.65-4.36.65-2.18 0-4.36-.5-4.88-2.68a5.1 5.1 0 0 1-.06-.82c1.78.44 3.61.66 5.45.66 1.34 0 2.68-.12 4-.35 3.19-.55 5.25-2.88 5.43-6.07.01-.17.02-.34.02-.51.01-1.83.01-3.66.004-5.49zm-4.7 6.497h-2.5v-5.2c0-1.1-.46-1.65-1.39-1.65-1.02 0-1.54.66-1.54 1.97v2.85h-2.27v-2.85c0-1.31-.52-1.97-1.54-1.97-.93 0-1.39.55-1.39 1.65v5.2H5.43v-5.4c0-1.1.28-1.97.84-2.62.58-.64 1.34-.98 2.29-.98 1.09 0 1.92.42 2.47 1.26l.57.97.57-.97c.55-.84 1.38-1.26 2.47-1.26.95 0 1.71.34 2.29.98.56.65.84 1.52.84 2.62v5.4z"/>
+		</svg>
 	</button>
 
 	<!-- 2. Floating Card: 页面右下角独立悬浮对话框（非全屏遮罩、不阻挡阅读、常驻） -->
@@ -31,7 +28,7 @@ const {
 		<div class="card-header">
 			<div class="header-left">
 				<div class="mastodon-badge">
-					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#6364ff">
 						<path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.244 15.54.024 13.525.007h-.05C11.42.024 9.45.244 8.304.309 5.617.703 3.35 2.735 3 5.313c-.002.05-.01.127-.01.21-.082 3.37-.09 6.74.02 10.11.16 2.66 1.48 5.25 4.09 6.28 2.01.78 4.21.91 6.36.78 1.47-.09 2.93-.36 4.34-.81l-.09-2.02c-1.42.43-2.89.65-4.36.65-2.18 0-4.36-.5-4.88-2.68a5.1 5.1 0 0 1-.06-.82c1.78.44 3.61.66 5.45.66 1.34 0 2.68-.12 4-.35 3.19-.55 5.25-2.88 5.43-6.07.01-.17.02-.34.02-.51.01-1.83.01-3.66.004-5.49zm-4.7 6.497h-2.5v-5.2c0-1.1-.46-1.65-1.39-1.65-1.02 0-1.54.66-1.54 1.97v2.85h-2.27v-2.85c0-1.31-.52-1.97-1.54-1.97-.93 0-1.39.55-1.39 1.65v5.2H5.43v-5.4c0-1.1.28-1.97.84-2.62.58-.64 1.34-.98 2.29-.98 1.09 0 1.92.42 2.47 1.26l.57.97.57-.97c.55-.84 1.38-1.26 2.47-1.26.95 0 1.71.34 2.29.98.56.65.84 1.52.84 2.62v5.4z"/>
 					</svg>
 				</div>
@@ -73,46 +70,38 @@ const {
 </div>
 
 <style>
-	/* 1. 边缘“露出一半”的挂件 */
+	/* 1. 纯 Mastodon 图标，无背景、无文字，露出一半 */
 	.mastodon-peeking-tab {
 		position: fixed;
 		bottom: 0;
 		right: 48px;
 		z-index: 90;
-		background: #6364ff;
-		color: #ffffff;
-		border: 1px solid rgba(255, 255, 255, 0.25);
-		border-bottom: none;
-		border-radius: 12px 12px 0 0;
-		padding: 6px 14px 18px; /* 底部内边距留出下半部分沉入空间 */
+		background: transparent;
+		border: none;
+		padding: 0;
+		margin: 0;
 		cursor: pointer;
-		font-family: var(--font-sans);
-		font-size: 0.85rem;
-		font-weight: 600;
-		box-shadow: 0 -3px 12px rgba(99, 100, 255, 0.35);
-		transform: translateY(48%); /* 默认沉入底部边缘，只露出一半小脑袋 */
-		transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-
-	/* 鼠标悬停（Hover）：平滑弹性弹起并微放大反馈 */
-	.mastodon-peeking-tab:hover {
-		transform: translateY(-4px) scale(1.06);
-		background: #5455f2;
-		box-shadow: 0 -4px 18px rgba(99, 100, 255, 0.55);
-	}
-
-	.tab-content {
 		display: flex;
 		align-items: center;
-		gap: 0.4rem;
+		justify-content: center;
+		transform: translateY(52%); /* 默认沉入边缘，只露出上半图标 */
+		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+		filter: drop-shadow(0 -2px 6px rgba(99, 100, 255, 0.35));
 	}
 
-	.tab-icon {
-		flex-shrink: 0;
+	/* 鼠标悬停（Hover）：平滑弹性完整弹起 + 微发光 */
+	.mastodon-peeking-tab:hover {
+		transform: translateY(-8px) scale(1.15);
+		filter: drop-shadow(0 -4px 14px rgba(99, 100, 255, 0.65));
 	}
 
-	.tab-label {
-		letter-spacing: 0.02em;
+	.pure-mastodon-icon {
+		display: block;
+		transition: transform 0.2s ease;
+	}
+
+	.mastodon-peeking-tab:hover .pure-mastodon-icon {
+		transform: rotate(-4deg);
 	}
 
 	/* 2. 右侧靠边独立悬浮对话框（非居中、非全高侧边栏） */
@@ -162,7 +151,6 @@ const {
 	}
 
 	.mastodon-badge {
-		color: #6364ff;
 		display: flex;
 		align-items: center;
 		justify-content: center;
