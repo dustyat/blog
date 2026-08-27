@@ -65,15 +65,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				<div class="prose content-body">
 					<slot />
 				</div>
-
-				<!-- Article Footer / Author Note -->
-				<div class="article-author-card">
-					<div class="author-avatar">✍️</div>
-					<div class="author-info">
-						<h4>感谢阅读</h4>
-						<p>本文采用 Markdown 编写，如果您觉得有启发或有任何想法，欢迎通过 GitHub 或社交平台交流讨论。</p>
-					</div>
-				</div>
 			</article>
 		</main>
 		<Footer />
@@ -194,41 +185,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
 	.content-body {
 		margin-bottom: 3.5rem;
-	}
-
-	.article-author-card {
-		display: flex;
-		align-items: center;
-		gap: 1.25rem;
-		padding: 1.5rem 1.75rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-lg);
-		margin-top: 3rem;
-		box-shadow: var(--shadow-sm);
-	}
-
-	.author-avatar {
-		font-size: 2rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 48px;
-		height: 48px;
-		background: var(--card-hover);
-		border-radius: 50%;
-	}
-
-	.author-info h4 {
-		margin: 0 0 0.35rem 0;
-		font-size: 1rem;
-	}
-
-	.author-info p {
-		margin: 0;
-		font-size: 0.875rem;
-		color: var(--text-muted);
-		line-height: 1.5;
 	}
 
 	:global(.copy-code-btn) {
