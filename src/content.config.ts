@@ -14,6 +14,8 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// 可选：该文章在 Mastodon 对应的嘟文 ID
+			mastodonTootId: z.string().optional(),
 		}),
 });
 

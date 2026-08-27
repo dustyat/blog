@@ -1,0 +1,415 @@
+---
+import { MASTODON_HOST, MASTODON_USER } from '../consts';
+
+interface Props {
+	tootId?: string;
+	host?: string;
+	username?: string;
+}
+
+const {
+	tootId = '',
+	host = MASTODON_HOST,
+	username = MASTODON_USER,
+} = Astro.props;
+---
+
+<div class="mastodon-widget-wrapper" data-host={host} data-username={username} data-toot-id={tootId}>
+	<!-- 1. Peeking Tab: 底部边缘“露出一半”的萌宠感挂件 -->
+	<button id="mastodon-tab" class="mastodon-peeking-tab" aria-label="展开 Mastodon 留言讨论卡片" title="Mastodon 留言互动">
+		<div class="tab-content">
+			<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="tab-icon">
+				<path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.244 15.54.024 13.525.007h-.05C11.42.024 9.45.244 8.304.309 5.617.703 3.35 2.735 3 5.313c-.002.05-.01.127-.01.21-.082 3.37-.09 6.74.02 10.11.16 2.66 1.48 5.25 4.09 6.28 2.01.78 4.21.91 6.36.78 1.47-.09 2.93-.36 4.34-.81l-.09-2.02c-1.42.43-2.89.65-4.36.65-2.18 0-4.36-.5-4.88-2.68a5.1 5.1 0 0 1-.06-.82c1.78.44 3.61.66 5.45.66 1.34 0 2.68-.12 4-.35 3.19-.55 5.25-2.88 5.43-6.07.01-.17.02-.34.02-.51.01-1.83.01-3.66.004-5.49zm-4.7 6.497h-2.5v-5.2c0-1.1-.46-1.65-1.39-1.65-1.02 0-1.54.66-1.54 1.97v2.85h-2.27v-2.85c0-1.31-.52-1.97-1.54-1.97-.93 0-1.39.55-1.39 1.65v5.2H5.43v-5.4c0-1.1.28-1.97.84-2.62.58-.64 1.34-.98 2.29-.98 1.09 0 1.92.42 2.47 1.26l.57.97.57-.97c.55-.84 1.38-1.26 2.47-1.26.95 0 1.71.34 2.29.98.56.65.84 1.52.84 2.62v5.4z"/>
+			</svg>
+			<span class="tab-label">💬 留言</span>
+		</div>
+	</button>
+
+	<!-- 2. Floating Card: 页面右下角独立悬浮对话框（非全屏遮罩、不阻挡阅读、常驻） -->
+	<aside id="mastodon-card" class="mastodon-floating-card" aria-label="Mastodon 留言板" style="display: none;">
+		<!-- Card Header -->
+		<div class="card-header">
+			<div class="header-left">
+				<div class="mastodon-badge">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.244 15.54.024 13.525.007h-.05C11.42.024 9.45.244 8.304.309 5.617.703 3.35 2.735 3 5.313c-.002.05-.01.127-.01.21-.082 3.37-.09 6.74.02 10.11.16 2.66 1.48 5.25 4.09 6.28 2.01.78 4.21.91 6.36.78 1.47-.09 2.93-.36 4.34-.81l-.09-2.02c-1.42.43-2.89.65-4.36.65-2.18 0-4.36-.5-4.88-2.68a5.1 5.1 0 0 1-.06-.82c1.78.44 3.61.66 5.45.66 1.34 0 2.68-.12 4-.35 3.19-.55 5.25-2.88 5.43-6.07.01-.17.02-.34.02-.51.01-1.83.01-3.66.004-5.49zm-4.7 6.497h-2.5v-5.2c0-1.1-.46-1.65-1.39-1.65-1.02 0-1.54.66-1.54 1.97v2.85h-2.27v-2.85c0-1.31-.52-1.97-1.54-1.97-.93 0-1.39.55-1.39 1.65v5.2H5.43v-5.4c0-1.1.28-1.97.84-2.62.58-.64 1.34-.98 2.29-.98 1.09 0 1.92.42 2.47 1.26l.57.97.57-.97c.55-.84 1.38-1.26 2.47-1.26.95 0 1.71.34 2.29.98.56.65.84 1.52.84 2.62v5.4z"/>
+					</svg>
+				</div>
+				<div>
+					<h4 class="card-title">Mastodon 互动讨论</h4>
+					<p class="card-author">
+						<a href={`https://${host}/@${username}`} target="_blank" rel="noopener noreferrer">@{username}@{host}</a>
+					</p>
+				</div>
+			</div>
+			<button id="card-close-btn" class="card-close-btn" aria-label="关闭对话框" title="关闭">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 6 6 18"></path>
+					<path d="m6 6 12 12"></path>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Action Link -->
+		<div class="card-action-bar">
+			{tootId ? (
+				<a href={`https://${host}/@${username}/${tootId}`} target="_blank" rel="noopener noreferrer" class="cta-button">
+					<span>在 Mastodon 上回复本篇文章 ➔</span>
+				</a>
+			) : (
+				<a href={`https://${host}/@${username}`} target="_blank" rel="noopener noreferrer" class="cta-button">
+					<span>前往博主 Mastodon 主页互动 ➔</span>
+				</a>
+			)}
+		</div>
+
+		<!-- Comments Scroll Area -->
+		<div id="card-comments-body" class="card-body">
+			<div class="loading-state">
+				<span>正在连接联邦宇宙获取讨论...</span>
+			</div>
+		</div>
+	</aside>
+</div>
+
+<style>
+	/* 1. 边缘“露出一半”的挂件 */
+	.mastodon-peeking-tab {
+		position: fixed;
+		bottom: 0;
+		right: 48px;
+		z-index: 90;
+		background: #6364ff;
+		color: #ffffff;
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		border-bottom: none;
+		border-radius: 12px 12px 0 0;
+		padding: 6px 14px 18px; /* 底部内边距留出下半部分沉入空间 */
+		cursor: pointer;
+		font-family: var(--font-sans);
+		font-size: 0.85rem;
+		font-weight: 600;
+		box-shadow: 0 -3px 12px rgba(99, 100, 255, 0.35);
+		transform: translateY(48%); /* 默认沉入底部边缘，只露出一半小脑袋 */
+		transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	/* 鼠标悬停（Hover）：平滑弹性弹起并微放大反馈 */
+	.mastodon-peeking-tab:hover {
+		transform: translateY(-4px) scale(1.06);
+		background: #5455f2;
+		box-shadow: 0 -4px 18px rgba(99, 100, 255, 0.55);
+	}
+
+	.tab-content {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.tab-icon {
+		flex-shrink: 0;
+	}
+
+	.tab-label {
+		letter-spacing: 0.02em;
+	}
+
+	/* 2. 右侧靠边独立悬浮对话框（非居中、非全高侧边栏） */
+	.mastodon-floating-card {
+		position: fixed;
+		bottom: 56px;
+		right: 24px;
+		width: 380px;
+		max-width: calc(100vw - 48px);
+		max-height: 480px;
+		background: var(--bg-surface);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-lg);
+		box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08);
+		z-index: 89;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		animation: cardPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: background-color 0.2s ease, border-color 0.2s ease;
+	}
+
+	@keyframes cardPopIn {
+		from {
+			opacity: 0;
+			transform: translateY(16px) scale(0.96);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	.card-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.85rem 1.15rem;
+		background: var(--card-bg);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.header-left {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+
+	.mastodon-badge {
+		color: #6364ff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.card-title {
+		font-size: 0.95rem;
+		font-weight: 700;
+		margin: 0;
+		color: var(--text-color);
+		line-height: 1.2;
+	}
+
+	.card-author {
+		font-size: 0.75rem;
+		color: var(--text-muted);
+		margin: 0.15rem 0 0;
+	}
+
+	.card-author a {
+		color: var(--accent);
+		text-decoration: underline;
+	}
+
+	.card-close-btn {
+		background: transparent;
+		border: 1px solid var(--border-color);
+		border-radius: 50%;
+		width: 28px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--text-muted);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.card-close-btn:hover {
+		color: var(--text-color);
+		background: var(--card-hover);
+		border-color: var(--text-color);
+	}
+
+	.card-action-bar {
+		padding: 0.75rem 1.15rem;
+		background: var(--card-hover);
+		border-bottom: 1px solid var(--border-color);
+	}
+
+	.cta-button {
+		display: block;
+		text-align: center;
+		padding: 0.5rem 0.85rem;
+		background: #6364ff;
+		color: #ffffff !important;
+		font-size: 0.825rem;
+		font-weight: 600;
+		border-radius: var(--radius-sm);
+		text-decoration: none !important;
+		transition: background-color 0.2s ease;
+	}
+
+	.cta-button:hover {
+		background: #5253ea;
+	}
+
+	.card-body {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1rem 1.15rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.85rem;
+	}
+
+	.loading-state {
+		text-align: center;
+		color: var(--text-muted);
+		font-size: 0.825rem;
+		padding: 2rem 0;
+	}
+
+	:global(.comment-card) {
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-sm);
+		padding: 0.75rem 0.85rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+	}
+
+	:global(.comment-user-row) {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	:global(.comment-user-avatar) {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	:global(.comment-user-name) {
+		font-weight: 600;
+		font-size: 0.8rem;
+		color: var(--text-color);
+		line-height: 1.2;
+	}
+
+	:global(.comment-user-handle) {
+		font-size: 0.7rem;
+		color: var(--text-muted);
+	}
+
+	:global(.comment-text) {
+		font-size: 0.825rem;
+		line-height: 1.5;
+		color: var(--text-color);
+		word-break: break-word;
+	}
+
+	:global(.comment-text p) {
+		margin: 0 0 0.4rem;
+	}
+
+	:global(.comment-text p:last-child) {
+		margin-bottom: 0;
+	}
+
+	:global(.comment-footer) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-size: 0.7rem;
+		color: var(--text-subtle);
+		border-top: 1px solid var(--border-subtle);
+		padding-top: 0.35rem;
+	}
+
+	:global(.card-empty-note) {
+		text-align: center;
+		padding: 1.75rem 0.5rem;
+		color: var(--text-muted);
+		font-size: 0.825rem;
+		line-height: 1.6;
+	}
+</style>
+
+<script>
+	const tab = document.getElementById('mastodon-tab');
+	const card = document.getElementById('mastodon-card');
+	const closeBtn = document.getElementById('card-close-btn');
+	const container = document.getElementById('card-comments-body');
+	const wrapper = document.querySelector('.mastodon-widget-wrapper');
+
+	let isOpen = false;
+	let isFetched = false;
+
+	const toggleCard = () => {
+		if (isOpen) {
+			closeCard();
+		} else {
+			openCard();
+		}
+	};
+
+	const openCard = () => {
+		if (!card) return;
+		card.style.display = 'flex';
+		isOpen = true;
+		if (!isFetched) {
+			loadComments();
+		}
+	};
+
+	const closeCard = () => {
+		if (!card) return;
+		card.style.display = 'none';
+		isOpen = false;
+	};
+
+	tab?.addEventListener('click', toggleCard);
+	closeBtn?.addEventListener('click', closeCard);
+
+	async function loadComments() {
+		if (!container || !wrapper) return;
+
+		const host = wrapper.getAttribute('data-host') || 'mastodon.social';
+		const username = wrapper.getAttribute('data-username') || '';
+		const tootId = wrapper.getAttribute('data-toot-id');
+
+		if (!tootId) {
+			container.innerHTML = `
+				<div class="card-empty-note">
+					<p>💬 本篇文章尚未绑定指定嘟文 ID。</p>
+					<p>欢迎前往博主 Mastodon 主页 <strong>@${username}@${host}</strong> 互动或关注！</p>
+				</div>
+			`;
+			isFetched = true;
+			return;
+		}
+
+		try {
+			const res = await fetch(`https://${host}/api/v1/statuses/${tootId}/context`);
+			if (!res.ok) throw new Error('Network error');
+			const data = await res.json();
+			const descendants = data.descendants || [];
+
+			if (descendants.length === 0) {
+				container.innerHTML = `
+					<div class="card-empty-note">
+						<p>🎉 暂无联邦宇宙评论，快来抢沙发吧！</p>
+						<p>点击上方按钮在 Mastodon 上回复即可同步显示到此处。</p>
+					</div>
+				`;
+			} else {
+				container.innerHTML = descendants.map((item: any) => {
+					const dateStr = new Date(item.created_at).toLocaleDateString();
+					return `
+						<div class="comment-card">
+							<div class="comment-user-row">
+								<img src="${item.account.avatar}" alt="${item.account.display_name}" class="comment-user-avatar" loading="lazy" />
+								<div>
+									<div class="comment-user-name">${item.account.display_name || item.account.username}</div>
+									<div class="comment-user-handle">@${item.account.acct}</div>
+								</div>
+							</div>
+							<div class="comment-text">${item.content}</div>
+							<div class="comment-footer">
+								<span>${dateStr}</span>
+								<span>❤️ ${item.favourites_count} · 🔁 ${item.reblogs_count}</span>
+							</div>
+						</div>
+					`;
+				}).join('');
+			}
+			isFetched = true;
+		} catch (e) {
+			container.innerHTML = `
+				<div class="card-empty-note">
+					<p>⚠️ 无法加载 Mastodon 评论，可直接点击上方按钮前往查看。</p>
+				</div>
+			`;
+		}
+	}
+</script>

@@ -5,10 +5,11 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import MastodonWidget from '../components/MastodonWidget.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = Astro.props;
 ---
 
 <!doctype html>
@@ -68,6 +69,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			</article>
 		</main>
 		<Footer />
+
+		<!-- Mastodon Peeking Widget & Non-blocking Floating Card -->
+		<MastodonWidget tootId={mastodonTootId} />
 
 		<script>
 			// Reading Progress Bar
