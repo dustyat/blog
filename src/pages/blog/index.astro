@@ -9,41 +9,57 @@ import { SITE_TITLE } from '../../consts';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Group posts by year for timeline
+const postsByYear = posts.reduce((acc, post) => {
+	const year = post.data.pubDate.getFullYear();
+	if (!acc[year]) acc[year] = [];
+	acc[year].push(post);
+	return acc;
+}, {} as Record<number, typeof posts>);
+
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
-		<BaseHead title={`所有文章 · ${SITE_TITLE}`} description="浏览所有技术文章与随笔" />
+		<BaseHead title={`文章归档 · ${SITE_TITLE}`} description="所有技术文章与思考的时间线归档" />
 	</head>
 	<body>
 		<Header />
 		<main>
 			<header class="page-header">
-				<div class="header-badge">Writing</div>
 				<h1 class="page-title">文章归档</h1>
-				<p class="page-desc">共有 {posts.length} 篇思考、架构设计与技术笔记。</p>
+				<p class="page-desc">按时间顺序索引的所有文章（共 {posts.length} 篇）</p>
 			</header>
 
-			<section class="posts-container">
-				<div class="posts-list">
-					{posts.map((post) => (
-						<article class="post-item">
-							<a href={`/blog/${post.id}/`} class="post-link">
-								<div class="post-content">
-									<div class="post-meta">
-										<FormattedDate date={post.data.pubDate} />
-										<span class="meta-dot">·</span>
-										<span class="meta-tag">Post</span>
-									</div>
-									<h2 class="post-heading">{post.data.title}</h2>
-									<p class="post-summary">{post.data.description}</p>
-								</div>
-								<div class="post-action">
-									<span class="read-btn">阅读全文 →</span>
-								</div>
-							</a>
-						</article>
+			<section class="timeline-section">
+				<div class="timeline">
+					{years.map((year) => (
+						<div class="timeline-year-group">
+							<div class="timeline-year-badge">{year}</div>
+							<div class="timeline-items">
+								{postsByYear[year].map((post) => (
+									<article class="timeline-item">
+										<div class="timeline-node">
+											<span class="timeline-dot"></span>
+										</div>
+										<div class="timeline-content">
+											<div class="timeline-date">
+												<FormattedDate date={post.data.pubDate} />
+											</div>
+											<h2 class="timeline-post-title">
+												<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+											</h2>
+											{post.data.description && (
+												<p class="timeline-post-desc">{post.data.description}</p>
+											)}
+										</div>
+									</article>
+								))}
+							</div>
+						</div>
 					))}
 				</div>
 			</section>
@@ -54,122 +70,117 @@ const posts = (await getCollection('blog')).sort(
 
 <style>
 	.page-header {
-		padding: 1.5rem 0 2.5rem;
+		padding: 1.5rem 0 2rem;
 		border-bottom: 1px solid var(--border-color);
-		margin-bottom: 2rem;
-	}
-
-	.header-badge {
-		display: inline-block;
-		font-size: 0.75rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: var(--accent);
-		margin-bottom: 0.5rem;
+		margin-bottom: 2.5rem;
 	}
 
 	.page-title {
-		font-size: 2.25rem;
+		font-size: 2rem;
 		font-weight: 800;
 		letter-spacing: -0.03em;
 		margin: 0 0 0.5rem 0;
 	}
 
 	.page-desc {
-		font-size: 1.05rem;
+		font-size: 1rem;
 		color: var(--text-muted);
 		margin: 0;
 	}
 
-	.posts-list {
+	.timeline {
 		display: flex;
 		flex-direction: column;
-		gap: 1.25rem;
+		gap: 2.5rem;
 	}
 
-	.post-item {
-		border: 1px solid var(--border-color);
-		background: var(--card-bg);
-		border-radius: var(--radius-lg);
-		transition: all 0.25s ease;
+	.timeline-year-group {
+		position: relative;
 	}
 
-	.post-item:hover {
-		border-color: var(--accent);
-		background: var(--card-hover);
-		transform: translateY(-2px);
-		box-shadow: var(--shadow-md);
-	}
-
-	.post-link {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		padding: 1.5rem 1.75rem;
-		text-decoration: none;
-		height: 100%;
-		gap: 1rem;
-	}
-
-	.post-meta {
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		font-size: 0.8rem;
-		color: var(--text-subtle);
-		margin-bottom: 0.5rem;
-	}
-
-	.meta-tag {
-		color: var(--accent);
-		font-weight: 600;
-	}
-
-	.post-heading {
-		font-size: 1.35rem;
+	.timeline-year-badge {
+		font-size: 1.1rem;
 		font-weight: 700;
-		color: var(--text-color);
-		margin: 0 0 0.5rem 0;
-		transition: color 0.2s ease;
-	}
-
-	.post-link:hover .post-heading {
-		color: var(--accent);
-	}
-
-	.post-summary {
-		font-size: 0.95rem;
+		font-family: var(--font-mono);
 		color: var(--text-muted);
-		line-height: 1.6;
-		margin: 0;
+		margin-bottom: 1.25rem;
+		padding-left: 0.25rem;
 	}
 
-	.post-action {
+	.timeline-items {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+		padding-left: 1.5rem;
+		border-left: 2px solid var(--timeline-line);
+		margin-left: 0.5rem;
+	}
+
+	.timeline-item {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.timeline-node {
+		position: absolute;
+		left: -1.5rem;
+		top: 0.35rem;
+		transform: translateX(-50%);
 		display: flex;
 		align-items: center;
-		justify-content: flex-end;
-		border-top: 1px solid var(--border-subtle);
-		padding-top: 0.75rem;
+		justify-content: center;
+		background-color: var(--bg-color);
+		padding: 3px 0;
 	}
 
-	.read-btn {
-		font-size: 0.875rem;
+	.timeline-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: var(--text-subtle);
+		transition: all 0.2s ease;
+	}
+
+	.timeline-item:hover .timeline-dot {
+		background-color: var(--accent);
+		transform: scale(1.4);
+		box-shadow: 0 0 8px var(--accent);
+	}
+
+	.timeline-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	.timeline-date {
+		font-size: 0.8rem;
+		font-family: var(--font-mono);
+		color: var(--text-muted);
+	}
+
+	.timeline-post-title {
+		font-size: 1.15rem;
 		font-weight: 600;
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.timeline-post-title a {
+		color: var(--text-color);
+		transition: color 0.15s ease;
+	}
+
+	.timeline-post-title a:hover {
 		color: var(--accent);
-		transition: transform 0.2s ease;
 	}
 
-	.post-link:hover .read-btn {
-		transform: translateX(3px);
-	}
-
-	@media (max-width: 640px) {
-		.page-title {
-			font-size: 1.85rem;
-		}
-		.post-link {
-			padding: 1.25rem;
-		}
+	.timeline-post-desc {
+		font-size: 0.9rem;
+		color: var(--text-muted);
+		margin: 0;
+		line-height: 1.5;
 	}
 </style>

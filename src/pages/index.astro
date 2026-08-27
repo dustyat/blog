@@ -6,11 +6,19 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 4);
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
 
-const topics = ['Cloud Run', 'Astro', 'Docker', 'CI/CD', '全栈开发', '架构设计', '自动化运维'];
+// Group posts by year for timeline
+const postsByYear = posts.reduce((acc, post) => {
+	const year = post.data.pubDate.getFullYear();
+	if (!acc[year]) acc[year] = [];
+	acc[year].push(post);
+	return acc;
+}, {} as Record<number, typeof posts>);
+
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 ---
 
 <!doctype html>
@@ -21,84 +29,46 @@ const topics = ['Cloud Run', 'Astro', 'Docker', 'CI/CD', '全栈开发', '架构
 	<body>
 		<Header />
 		<main>
-			<!-- Hero Section -->
-			<section class="hero-section">
-				<div class="hero-badge">
-					<span class="pulse-dot"></span>
-					<span>2026 Tech & Notes · Continuous Delivery</span>
-				</div>
-				<h1 class="hero-title">
-					保持好奇，探索技术与数字化的无限可能。
-				</h1>
-				<p class="hero-desc">
-					欢迎来到我的个人博客。这里记录关于现代 Web 架构、云原生实践与技术思考。
-					全站基于 <strong>Astro</strong> 构建，通过 <strong>GitHub Actions</strong> 实现全自动化持续交付至 <strong>Google Cloud Run</strong>。
+			<!-- Simple Intro -->
+			<section class="intro-section">
+				<h1 class="intro-title">你好，我是博主 👋</h1>
+				<p class="intro-desc">
+					记录思考、架构演进与技术实践。基于 <strong>Astro</strong> 与 <strong>Google Cloud Run</strong> 部署。
 				</p>
-				<div class="hero-actions">
-					<a href="/blog" class="btn btn-primary">
-						<span>浏览所有文章</span>
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M5 12h14"></path>
-							<path d="m12 5 7 7-7 7"></path>
-						</svg>
-					</a>
-					<a href="/about" class="btn btn-secondary">关于本站</a>
-				</div>
 			</section>
 
-			<!-- Topics Cloud -->
-			<section class="topics-section">
-				<div class="topics-list">
-					{topics.map((topic) => (
-						<span class="topic-tag">#{topic}</span>
-					))}
-				</div>
-			</section>
-
-			<!-- Recent Posts -->
-			<section class="posts-section">
-				<div class="section-header">
-					<h2 class="section-title">最新文章</h2>
-					<a href="/blog" class="section-more">
-						查看全部 ({posts.length}+)
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="M5 12h14"></path>
-							<path d="m12 5 7 7-7 7"></path>
-						</svg>
-					</a>
+			<!-- Timeline of Articles -->
+			<section class="timeline-section">
+				<div class="timeline-header">
+					<h2>时间线 · 文章</h2>
 				</div>
 
-				<div class="posts-list">
-					{posts.map((post) => (
-						<a href={`/blog/${post.id}/`} class="post-card">
-							<div class="post-info">
-								<h3 class="post-title">{post.data.title}</h3>
-								<p class="post-desc">{post.data.description}</p>
-								<div class="post-meta">
-									<FormattedDate date={post.data.pubDate} />
-									<span class="meta-dot">·</span>
-									<span>Markdown</span>
-								</div>
+				<div class="timeline">
+					{years.map((year) => (
+						<div class="timeline-year-group">
+							<div class="timeline-year-badge">{year}</div>
+							<div class="timeline-items">
+								{postsByYear[year].map((post) => (
+									<article class="timeline-item">
+										<div class="timeline-node">
+											<span class="timeline-dot"></span>
+										</div>
+										<div class="timeline-content">
+											<div class="timeline-date">
+												<FormattedDate date={post.data.pubDate} />
+											</div>
+											<h3 class="timeline-post-title">
+												<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+											</h3>
+											{post.data.description && (
+												<p class="timeline-post-desc">{post.data.description}</p>
+											)}
+										</div>
+									</article>
+								))}
 							</div>
-							<div class="post-arrow">
-								<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<path d="M5 12h14"></path>
-									<path d="m12 5 7 7-7 7"></path>
-								</svg>
-							</div>
-						</a>
+						</div>
 					))}
-				</div>
-			</section>
-
-			<!-- Feature Card / Workflow Callout -->
-			<section class="callout-section">
-				<div class="callout-card">
-					<div class="callout-icon">⚡</div>
-					<div class="callout-content">
-						<h3>现代极简架构流程</h3>
-						<p>本地 Markdown 撰写 ➔ Git Push 触发 ➔ GitHub Actions 云端打包 ➔ 零秒缩容部署至 Google Cloud Run。</p>
-					</div>
 				</div>
 			</section>
 		</main>
@@ -107,252 +77,138 @@ const topics = ['Cloud Run', 'Astro', 'Docker', 'CI/CD', '全栈开发', '架构
 </html>
 
 <style>
-	.hero-section {
-		padding: 2.5rem 0 3rem;
+	.intro-section {
+		padding: 1.5rem 0 2.5rem;
 		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 2.5rem;
 	}
 
-	.hero-badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.35rem 0.85rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-full);
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: var(--text-muted);
-		margin-bottom: 1.5rem;
-		box-shadow: var(--shadow-sm);
-	}
-
-	.pulse-dot {
-		width: 6px;
-		height: 6px;
-		background: var(--accent);
-		border-radius: 50%;
-		box-shadow: 0 0 8px var(--accent);
-	}
-
-	.hero-title {
-		font-size: 2.75rem;
+	.intro-title {
+		font-size: 2.2rem;
 		font-weight: 800;
-		letter-spacing: -0.035em;
-		line-height: 1.2;
-		margin-bottom: 1.25rem;
+		letter-spacing: -0.03em;
+		margin-bottom: 0.75rem;
 	}
 
-	.hero-desc {
-		font-size: 1.15rem;
+	.intro-desc {
+		font-size: 1.05rem;
 		color: var(--text-muted);
-		line-height: 1.7;
-		max-width: 680px;
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	.intro-desc strong {
+		color: var(--text-color);
+	}
+
+	.timeline-section {
+		margin-top: 1rem;
+	}
+
+	.timeline-header {
 		margin-bottom: 2rem;
 	}
 
-	.hero-desc strong {
-		color: var(--text-color);
-	}
-
-	.hero-actions {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		flex-wrap: wrap;
-	}
-
-	.btn {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.65rem 1.35rem;
-		border-radius: var(--radius-md);
-		font-size: 0.95rem;
-		font-weight: 600;
-		transition: all 0.2s ease;
-		text-decoration: none;
-	}
-
-	.btn-primary {
-		background: var(--accent);
-		color: #ffffff;
-		box-shadow: 0 4px 14px var(--accent-glow);
-	}
-
-	.btn-primary:hover {
-		background: var(--accent-hover);
-		color: #ffffff;
-		transform: translateY(-1px);
-	}
-
-	.btn-secondary {
-		background: var(--card-bg);
-		color: var(--text-color);
-		border: 1px solid var(--border-color);
-	}
-
-	.btn-secondary:hover {
-		background: var(--card-hover);
-		border-color: var(--text-muted);
-	}
-
-	.topics-section {
-		padding: 1.5rem 0;
-	}
-
-	.topics-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-
-	.topic-tag {
-		font-size: 0.8rem;
-		padding: 0.25rem 0.65rem;
-		background: var(--card-hover);
-		color: var(--text-muted);
-		border-radius: var(--radius-full);
-		border: 1px solid var(--border-color);
-	}
-
-	.posts-section {
-		margin-top: 2.5rem;
-	}
-
-	.section-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 1.25rem;
-	}
-
-	.section-title {
-		font-size: 1.4rem;
+	.timeline-header h2 {
+		font-size: 1.25rem;
 		font-weight: 700;
+		color: var(--text-color);
 		margin: 0;
 	}
 
-	.section-more {
-		display: inline-flex;
+	.timeline {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+
+	.timeline-year-group {
+		position: relative;
+	}
+
+	.timeline-year-badge {
+		font-size: 1.1rem;
+		font-weight: 700;
+		font-family: var(--font-mono);
+		color: var(--text-muted);
+		margin-bottom: 1.25rem;
+		padding-left: 0.25rem;
+	}
+
+	.timeline-items {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+		padding-left: 1.5rem;
+		border-left: 2px solid var(--timeline-line);
+		margin-left: 0.5rem;
+	}
+
+	.timeline-item {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.timeline-node {
+		position: absolute;
+		left: -1.5rem;
+		top: 0.35rem;
+		transform: translateX(-50%);
+		display: flex;
 		align-items: center;
-		gap: 0.35rem;
-		font-size: 0.875rem;
+		justify-content: center;
+		background-color: var(--bg-color);
+		padding: 3px 0;
+	}
+
+	.timeline-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background-color: var(--text-subtle);
+		transition: all 0.2s ease;
+	}
+
+	.timeline-item:hover .timeline-dot {
+		background-color: var(--accent);
+		transform: scale(1.4);
+		box-shadow: 0 0 8px var(--accent);
+	}
+
+	.timeline-content {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	.timeline-date {
+		font-size: 0.8rem;
+		font-family: var(--font-mono);
 		color: var(--text-muted);
 	}
 
-	.section-more:hover {
-		color: var(--accent);
-	}
-
-	.posts-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.85rem;
-	}
-
-	.post-card {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 1.25rem 1.4rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-md);
-		transition: all 0.25s ease;
-		text-decoration: none;
-	}
-
-	.post-card:hover {
-		border-color: var(--accent);
-		background: var(--card-hover);
-		transform: translateY(-2px);
-		box-shadow: var(--shadow-md);
-	}
-
-	.post-info {
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-
-	.post-title {
+	.timeline-post-title {
 		font-size: 1.15rem;
 		font-weight: 600;
 		margin: 0;
-		color: var(--text-color);
-		transition: color 0.2s;
+		line-height: 1.4;
 	}
 
-	.post-card:hover .post-title {
+	.timeline-post-title a {
+		color: var(--text-color);
+		transition: color 0.15s ease;
+	}
+
+	.timeline-post-title a:hover {
 		color: var(--accent);
 	}
 
-	.post-desc {
+	.timeline-post-desc {
 		font-size: 0.9rem;
 		color: var(--text-muted);
 		margin: 0;
 		line-height: 1.5;
-	}
-
-	.post-meta {
-		font-size: 0.775rem;
-		color: var(--text-subtle);
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-		margin-top: 0.25rem;
-	}
-
-	.post-arrow {
-		color: var(--text-subtle);
-		transition: transform 0.2s ease, color 0.2s ease;
-		padding-left: 1rem;
-	}
-
-	.post-card:hover .post-arrow {
-		color: var(--accent);
-		transform: translateX(4px);
-	}
-
-	.callout-section {
-		margin-top: 3.5rem;
-	}
-
-	.callout-card {
-		display: flex;
-		align-items: flex-start;
-		gap: 1.25rem;
-		padding: 1.5rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-lg);
-		box-shadow: var(--shadow-sm);
-	}
-
-	.callout-icon {
-		font-size: 1.8rem;
-		line-height: 1;
-	}
-
-	.callout-content h3 {
-		font-size: 1.05rem;
-		margin: 0 0 0.4rem 0;
-	}
-
-	.callout-content p {
-		font-size: 0.9rem;
-		color: var(--text-muted);
-		margin: 0;
-		line-height: 1.6;
-	}
-
-	@media (max-width: 640px) {
-		.hero-title {
-			font-size: 2rem;
-		}
-		.hero-desc {
-			font-size: 1rem;
-		}
 	}
 </style>
