@@ -1,0 +1,48 @@
+server {
+    listen ${PORT};
+    server_name localhost;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # Gzip 压缩配置
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/javascript
+        application/x-javascript
+        application/json
+        application/xml
+        application/rss+xml
+        image/svg+xml;
+
+    # Astro 生成的静态资源（带哈希）持久缓存
+    location ~* ^/_astro/ {
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # 字体与图片缓存
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|webp|woff2?|eot|ttf|svg)$ {
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    # 根路由及页面请求
+    location / {
+        try_files $uri $uri/ $uri/index.html /index.html =404;
+        add_header Cache-Control "public, max-age=0, must-revalidate";
+    }
+
+    # 404 错误页回退
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
