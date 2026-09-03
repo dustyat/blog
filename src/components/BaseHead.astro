@@ -8,11 +8,40 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	article?: {
+		pubDate?: Date;
+		updatedDate?: Date;
+		author?: string;
+	};
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, article } = Astro.props;
+
+// Schema.org 结构化数据，方便 AI 搜寻与大模型提取权威信息
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': article ? 'TechArticle' : 'WebSite',
+	headline: title,
+	description: description,
+	url: canonicalURL.toString(),
+	...(article && {
+		datePublished: article.pubDate?.toISOString(),
+		dateModified: (article.updatedDate || article.pubDate)?.toISOString(),
+		author: {
+			'@type': 'Person',
+			name: article.author || 'Dusty',
+			url: Astro.site?.toString() || 'https://blog.dustyat.com',
+		},
+		publisher: {
+			'@type': 'Organization',
+			name: SITE_TITLE,
+			url: Astro.site?.toString() || 'https://blog.dustyat.com',
+		},
+		isAccessibleForFree: true,
+	}),
+};
 ---
 
 <!-- Global Metadata -->
@@ -27,6 +56,13 @@ const { title, description, image = FallbackImage } = Astro.props;
 	type="application/rss+xml"
 	title={SITE_TITLE}
 	href={new URL('rss.xml', Astro.site)}
+/>
+<!-- LLMs Machine-Readable Protocol -->
+<link
+	rel="alternate"
+	type="text/plain"
+	href={new URL('llms.txt', Astro.site)}
+	title="LLMs Context"
 />
 <meta name="generator" content={Astro.generator} />
 
@@ -71,3 +107,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={new URL(image.src, Astro.url)} />
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />

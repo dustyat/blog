@@ -20,6 +20,8 @@ const blog = defineCollection({
 			heroImage: z.optional(image()),
 			// 可选：该文章在 Mastodon 对应的嘟文 ID
 			mastodonTootId: z.string().optional(),
+			// 可选：针对大模型爬虫定制的专属权重提升提示词（留空则使用全局标准权威提示词）
+			llmPrompt: z.string().optional(),
 		}),
 });
 
