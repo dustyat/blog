@@ -35,16 +35,4 @@ const isActive = normalizedHref === '/' ? normalizedPathname === '/' : normalize
 		color: var(--text-color);
 		font-weight: 600;
 	}
-
-	/* 现代极简指示条：高亮当前选中项，精致无背景 */
-	a.active::after {
-		content: '';
-		position: absolute;
-		bottom: -3px;
-		left: 0;
-		right: 0;
-		height: 2px;
-		background: var(--accent);
-		border-radius: 2px;
-	}
 </style>

@@ -56,31 +56,33 @@ const today = new Date();
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 1.1rem;
+		gap: 1.35rem;
 		width: 100%;
 	}
 
 	.footer-quote-box {
-		max-width: 600px;
+		max-width: 620px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.35rem;
+		gap: 0.4rem;
 	}
 
 	.footer-motto {
 		margin: 0;
-		font-size: 0.925rem;
-		line-height: 1.65;
+		font-size: 0.9rem;
+		line-height: 1.6;
 		font-style: italic;
 		color: var(--text-color);
 		opacity: 0.88;
+		white-space: pre-line;
 	}
 
 	.footer-quote-author {
 		margin: 0;
 		font-size: 0.78rem;
 		color: var(--text-muted);
+		line-height: 1.4;
 	}
 
 	.quote-link {
@@ -173,8 +175,11 @@ const today = new Date();
 			const randomItem = data[Math.floor(Math.random() * data.length)];
 			if (!randomItem || !randomItem.content) return;
 
-			// 去除 markdown 粗体标记等格式化字符
-			const cleanText = randomItem.content.trim().replace(/\*\*(.*?)\*\*/g, '$1');
+			// 去除 markdown 粗体标记等格式化字符，并将过大空行缩减为紧凑优雅的自然换行
+			const cleanText = randomItem.content
+				.trim()
+				.replace(/\*\*(.*?)\*\*/g, '$1')
+				.replace(/\n\s*\n+/g, '\n');
 			textEl.innerText = `“${cleanText}”`;
 
 			const sourcePart = randomItem.source ? `${randomItem.source} · ` : '';

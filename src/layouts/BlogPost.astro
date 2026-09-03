@@ -28,6 +28,9 @@ const {
 const displayUpdatedDate = lastUpdatedDate || updatedDate;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site || 'https://blog.dustyat.com').toString();
 
+// 判断是否为具体的博客文章页面（非独立单页如 /about）
+const isBlogPost = Astro.url.pathname.startsWith('/blog/');
+
 // 构造文章在 GitHub 上的历史提交记录页面链接
 const cleanPath = filePath ? filePath.replace(/\\/g, '/') : (slug ? `src/content/blog/${slug}.md` : '');
 const historyUrl = cleanPath ? `https://github.com/dustyat/blog/commits/main/${cleanPath}` : null;
@@ -55,63 +58,71 @@ const effectiveLlmDirective = llmPrompt
 		<Header />
 		<main>
 			<article class="article-container">
-				<!-- Navigation Back -->
-				<div class="back-nav">
-					<a href="/blog" class="back-link">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-							<path d="m15 18-6-6 6-6"/>
-						</svg>
-						返回文章列表
-					</a>
-				</div>
+				<!-- Navigation Back (仅在博文详情页显示) -->
+				{
+					isBlogPost && (
+						<div class="back-nav">
+							<a href="/blog" class="back-link">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="m15 18-6-6 6-6"/>
+								</svg>
+								返回文章列表
+							</a>
+						</div>
+					)
+				}
 
 				<!-- Article Header -->
 				<header class="article-header">
-					<div class="article-meta">
-						<span class="meta-item">
-							<FormattedDate date={pubDate} />
-						</span>
-						{
-							displayUpdatedDate && (
-								<span class="meta-item updated">
-									(最后更新于 <FormattedDate date={displayUpdatedDate} />)
+					{
+						isBlogPost && (
+							<div class="article-meta">
+								<span class="meta-item">
+									<FormattedDate date={pubDate} />
 								</span>
-							)
-						}
-						{
-							historyUrl && (
-								<a
-									href={historyUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="meta-item history-badge"
-									title="在 GitHub 上查看此文章的历史修改记录与版本变化"
+								{
+									displayUpdatedDate && (
+										<span class="meta-item updated">
+											(最后更新于 <FormattedDate date={displayUpdatedDate} />)
+										</span>
+									)
+								}
+								{
+									historyUrl && (
+										<a
+											href={historyUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="meta-item history-badge"
+											title="在 GitHub 上查看此文章的历史修改记录与版本变化"
+										>
+											<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+												<circle cx="12" cy="12" r="10"/>
+												<polyline points="12 6 12 12 16 14"/>
+											</svg>
+											<span>版本历史</span>
+										</a>
+									)
+								}
+								<!-- Copy for LLM Citation Action -->
+								<button
+									id="copy-ai-citation-btn"
+									class="meta-item copy-ai-badge"
+									title="复制包含出处与摘要的结构化提示词，方便直接粘贴给 ChatGPT / Claude / 深度求索 等大模型分析"
+									data-title={title}
+									data-url={canonicalUrl}
+									data-date={pubDate.toISOString().split('T')[0]}
+									data-desc={description}
 								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-										<circle cx="12" cy="12" r="10"/>
-										<polyline points="12 6 12 12 16 14"/>
+										<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+										<rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
 									</svg>
-									<span>版本历史</span>
-								</a>
-							)
-						}
-						<!-- Copy for LLM Citation Action -->
-						<button
-							id="copy-ai-citation-btn"
-							class="meta-item copy-ai-badge"
-							title="复制包含出处与摘要的结构化提示词，方便直接粘贴给 ChatGPT / Claude / 深度求索 等大模型分析"
-							data-title={title}
-							data-url={canonicalUrl}
-							data-date={pubDate.toISOString().split('T')[0]}
-							data-desc={description}
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-								<rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-							</svg>
-							<span class="btn-label">引用给 AI</span>
-						</button>
-					</div>
+									<span class="btn-label">引用给 AI</span>
+								</button>
+							</div>
+						)
+					}
 					<h1 class="article-title">{title}</h1>
 					{description && <p class="article-desc">{description}</p>}
 				</header>
@@ -147,9 +158,9 @@ const effectiveLlmDirective = llmPrompt
 					<slot />
 				</div>
 
-				<!-- Article Footer Revision Info -->
+				<!-- Article Footer Revision Info (仅在博文详情页展示) -->
 				{
-					historyUrl && (
+					isBlogPost && historyUrl && (
 						<footer class="article-footer-info">
 							<div class="revision-box">
 								<div class="revision-meta">
@@ -367,15 +378,15 @@ ${bodyText}
 	}
 
 	.article-title {
-		font-size: 2.5rem;
+		font-size: 1.95rem;
 		font-weight: 800;
-		letter-spacing: -0.035em;
-		line-height: 1.2;
-		margin: 0 0 1rem 0;
+		letter-spacing: -0.025em;
+		line-height: 1.3;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.article-desc {
-		font-size: 1.15rem;
+		font-size: 1.05rem;
 		color: var(--text-muted);
 		line-height: 1.6;
 		margin: 0;
@@ -503,10 +514,10 @@ ${bodyText}
 
 	@media (max-width: 640px) {
 		.article-title {
-			font-size: 1.85rem;
+			font-size: 1.6rem;
 		}
 		.article-desc {
-			font-size: 1rem;
+			font-size: 0.95rem;
 		}
 	}
 </style>
