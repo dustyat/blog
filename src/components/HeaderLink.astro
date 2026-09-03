@@ -4,10 +4,24 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const normalizedPathname = pathname.replace(/\/$/, '') || '/';
-const normalizedHref = String(href).replace(/\/$/, '') || '/';
-const isActive = normalizedHref === '/' ? normalizedPathname === '/' : normalizedPathname.startsWith(normalizedHref);
+
+// Strip BASE_URL prefix safely if present
+const baseUrl = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+let pathname = Astro.url.pathname;
+if (baseUrl && pathname.startsWith(baseUrl)) {
+	pathname = pathname.slice(baseUrl.length);
+}
+
+// Normalize path: ensure leading slash, remove trailing slash
+const normalize = (path: string) => {
+	const cleaned = path.replace(/\/+$/, '');
+	return cleaned.startsWith('/') ? cleaned : '/' + cleaned;
+};
+
+const current = normalize(pathname) || '/';
+const target = normalize(String(href)) || '/';
+
+const isActive = target === '/' ? current === '/' : (current === target || current.startsWith(target + '/'));
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>

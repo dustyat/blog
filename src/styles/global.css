@@ -15,7 +15,7 @@
 	--card-bg: #ffffff;
 	--card-hover: #f6f8fa;
 	--border-color: #d0d7de;
-	--border-subtle: #eaeef2;
+	--border-subtle: #e5e7eb;
 	--timeline-line: #d0d7de;
 	--text-color: #1f2328;
 	--text-muted: #57606a;
@@ -114,7 +114,7 @@ body {
 }
 
 main {
-	width: 820px;
+	width: 760px;
 	max-width: calc(100% - 2.5rem);
 	margin: 0 auto;
 	padding: 2rem 0 4.5rem;

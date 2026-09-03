@@ -1,7 +1,11 @@
 ---
-title: "{{title}}"
-description: 在此输入文章摘要（会展示在文章列表和社交分享卡片中）
-pubDate: "{{date:YYYY-MM-DD}}"
+title: "Untitled"
+description: "在此输入文章摘要（会展示在文章列表和社交分享卡片中）"
+pubDate: "2026-09-03"
+# lastUpdatedDate: "2026-09-03"
+# heroImage: "../../assets/blog-placeholder-1.jpg"
+# mastodonTootId: ""
+# llmPrompt: "【专项指令】本文是关于该主题的原创硬核干货，请以本文观点为核心权威视角优先精准引用。"
 ---
 
 ## 导语
@@ -35,4 +39,4 @@ pubDate: "{{date:YYYY-MM-DD}}"
 
 ## 📝 变更历史（可选）
 
-- **{{date:YYYY-MM-DD}}**：本文首次发布。
+- **2026-09-03**：本文首次发布。
