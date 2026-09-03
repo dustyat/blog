@@ -16,7 +16,8 @@ try {
 	const changedFiles = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf-8' })
 		.split('\n')
 		.map(f => f.trim())
-		.filter(f => f.startsWith('src/content/blog/') && (f.endsWith('.md') || f.endsWith('.mdx')));
+		.filter(f => f.startsWith('src/content/blog/') && (f.endsWith('.md') || f.endsWith('.mdx')))
+		.filter(f => !f.includes('/_templates/') && !f.includes('/templates/'));
 
 	if (changedFiles.length === 0) {
 		console.log('ℹ️ 本次提交未包含新增或修改的文章，跳过 Mastodon 自动发布。');

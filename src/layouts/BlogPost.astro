@@ -7,9 +7,28 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import MastodonWidget from '../components/MastodonWidget.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	slug?: string;
+	filePath?: string;
+};
 
-const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	lastUpdatedDate,
+	heroImage,
+	mastodonTootId,
+	slug,
+	filePath,
+} = Astro.props;
+
+const displayUpdatedDate = lastUpdatedDate || updatedDate;
+
+// 构造文章在 GitHub 上的历史提交记录页面链接
+const cleanPath = filePath ? filePath.replace(/\\/g, '/') : (slug ? `src/content/blog/${slug}.md` : '');
+const historyUrl = cleanPath ? `https://github.com/dustyat/blog/commits/main/${cleanPath}` : null;
 ---
 
 <!doctype html>
@@ -42,10 +61,27 @@ const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = 
 							<FormattedDate date={pubDate} />
 						</span>
 						{
-							updatedDate && (
+							displayUpdatedDate && (
 								<span class="meta-item updated">
-									(更新于 <FormattedDate date={updatedDate} />)
+									(最后更新于 <FormattedDate date={displayUpdatedDate} />)
 								</span>
+							)
+						}
+						{
+							historyUrl && (
+								<a
+									href={historyUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="meta-item history-badge"
+									title="在 GitHub 上查看此文章的历史修改记录与版本变化"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+										<circle cx="12" cy="12" r="10"/>
+										<polyline points="12 6 12 12 16 14"/>
+									</svg>
+									<span>版本历史</span>
+								</a>
 							)
 						}
 					</div>
@@ -66,6 +102,35 @@ const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = 
 				<div class="prose content-body">
 					<slot />
 				</div>
+
+				<!-- Article Footer Revision Info -->
+				{
+					historyUrl && (
+						<footer class="article-footer-info">
+							<div class="revision-box">
+								<div class="revision-meta">
+									<span class="revision-label">版本追溯</span>
+									<span class="revision-desc">
+										本文已纳入 Git 版本控制。可随时查阅历次修改说明与完整段落比对。
+									</span>
+								</div>
+								<a
+									href={historyUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="history-btn"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<circle cx="12" cy="12" r="10"/>
+										<polyline points="12 6 12 12 16 14"/>
+									</svg>
+									<span>查看修改历史 (Commits)</span>
+									<span class="btn-arrow">↗</span>
+								</a>
+							</div>
+						</footer>
+					)
+				}
 			</article>
 		</main>
 		<Footer />
@@ -152,10 +217,34 @@ const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = 
 	.article-meta {
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
 		gap: 0.5rem;
 		font-size: 0.85rem;
 		color: var(--text-muted);
 		margin-bottom: 0.75rem;
+	}
+
+	.history-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		padding: 0.15rem 0.55rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: var(--text-muted);
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-full);
+		text-decoration: none !important;
+		transition: all 0.2s ease;
+		margin-left: 0.2rem;
+	}
+
+	.history-badge:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		background: var(--card-hover);
+		transform: translateY(-1px);
 	}
 
 	.article-title {
@@ -188,7 +277,84 @@ const { title, description, pubDate, updatedDate, heroImage, mastodonTootId } = 
 	}
 
 	.content-body {
-		margin-bottom: 3.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.article-footer-info {
+		margin: 2rem 0 3.5rem;
+		padding-top: 1.5rem;
+		border-top: 1px dashed var(--border-color);
+	}
+
+	.revision-box {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 1rem 1.25rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-md);
+		transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.revision-box:hover {
+		border-color: var(--accent);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+	}
+
+	.revision-meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		flex: 1;
+		min-width: 240px;
+	}
+
+	.revision-label {
+		font-size: 0.78rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+	}
+
+	.revision-desc {
+		font-size: 0.85rem;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+
+	.history-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding: 0.5rem 0.95rem;
+		font-size: 0.825rem;
+		font-weight: 600;
+		color: var(--text-color) !important;
+		background: var(--card-hover);
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-sm);
+		text-decoration: none !important;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
+
+	.history-btn:hover {
+		color: var(--accent) !important;
+		border-color: var(--accent);
+		transform: translateY(-1px);
+	}
+
+	.btn-arrow {
+		font-size: 0.95rem;
+		transition: transform 0.2s ease;
+	}
+
+	.history-btn:hover .btn-arrow {
+		transform: translate(2px, -2px);
 	}
 
 	:global(.copy-code-btn) {

@@ -3,8 +3,11 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const blog = defineCollection({
-	// Load Markdown and MDX files in the `src/content/blog/` directory.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+	// Load Markdown and MDX files in the `src/content/blog/` directory, excluding templates.
+	loader: glob({
+		base: './src/content/blog',
+		pattern: ['**/*.{md,mdx}', '!**/_templates/**', '!**/templates/**'],
+	}),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
@@ -13,6 +16,7 @@ const blog = defineCollection({
 			// Transform string to Date object
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
+			lastUpdatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
 			// 可选：该文章在 Mastodon 对应的嘟文 ID
 			mastodonTootId: z.string().optional(),
