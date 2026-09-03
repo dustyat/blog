@@ -16,10 +16,9 @@
 	--card-hover: #f6f8fa;
 	--border-color: #d0d7de;
 	--border-subtle: #e5e7eb;
-	--timeline-line: #d0d7de;
-	--text-color: #1f2328;
-	--text-muted: #57606a;
-	--text-subtle: #8c959f;
+	--text-color: #000000;
+	--text-muted: #6b7280;
+	--text-subtle: #9ca3af;
 	
 	--accent: #0969da;
 	--accent-hover: #0550ae;
@@ -176,6 +175,12 @@ img {
 
 .prose li {
 	margin-bottom: 0.35rem;
+}
+
+.prose strong,
+.prose b {
+	color: var(--text-color);
+	font-weight: 700;
 }
 
 /* User Specified Inline Code (行内代码) */

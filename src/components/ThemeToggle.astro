@@ -22,20 +22,17 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		border: 1px solid var(--border-subtle);
-		background: var(--card-bg);
+		padding: 6px;
+		border: none;
+		background: transparent;
 		color: var(--text-muted);
 		cursor: pointer;
-		transition: all 0.2s ease;
+		transition: color 0.2s ease, transform 0.2s ease;
 	}
 
 	.theme-toggle:hover {
 		color: var(--text-color);
-		border-color: var(--accent);
-		transform: scale(1.05);
+		transform: scale(1.1);
 	}
 
 	.sun-icon {

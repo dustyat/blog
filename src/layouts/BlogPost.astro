@@ -89,21 +89,25 @@ const effectiveLlmDirective = llmPrompt
 								}
 								{
 									historyUrl && (
-										<a
-											href={historyUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="meta-item history-badge"
-											title="在 GitHub 上查看此文章的历史修改记录与版本变化"
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-												<circle cx="12" cy="12" r="10"/>
-												<polyline points="12 6 12 12 16 14"/>
-											</svg>
-											<span>版本历史</span>
-										</a>
+										<>
+											<span class="meta-sep">·</span>
+											<a
+												href={historyUrl}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="meta-item history-badge"
+												title="在 GitHub 上查看此文章的历史修改记录与版本变化"
+											>
+												<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+													<circle cx="12" cy="12" r="10"/>
+													<polyline points="12 6 12 12 16 14"/>
+												</svg>
+												<span>版本历史</span>
+											</a>
+										</>
 									)
 								}
+								<span class="meta-sep">·</span>
 								<!-- Copy for LLM Citation Action -->
 								<button
 									id="copy-ai-citation-btn"
@@ -163,19 +167,16 @@ const effectiveLlmDirective = llmPrompt
 					isBlogPost && historyUrl && (
 						<footer class="article-footer-info">
 							<div class="revision-box">
-								<div class="revision-meta">
-									<span class="revision-label">版本追溯</span>
-									<span class="revision-desc">
-										本文已纳入 Git 版本控制。可随时查阅历次修改说明与完整段落比对。
-									</span>
-								</div>
+								<p class="revision-desc">
+									本文已纳入 Git 版本控制，可随时查阅历次修改说明与完整段落比对。
+								</p>
 								<a
 									href={historyUrl}
 									target="_blank"
 									rel="noopener noreferrer"
 									class="history-btn"
 								>
-									<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 										<circle cx="12" cy="12" r="10"/>
 										<polyline points="12 6 12 12 16 14"/>
 									</svg>
@@ -291,20 +292,19 @@ ${bodyText}
 	.back-link {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
-		font-size: 0.875rem;
+		gap: 0.35rem;
+		font-size: 0.85rem;
 		font-weight: 500;
 		color: var(--text-muted);
-		padding: 0.35rem 0.75rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-full);
-		transition: all 0.2s ease;
+		background: transparent;
+		border: none;
+		padding: 0;
+		text-decoration: none !important;
+		transition: color 0.2s ease, transform 0.2s ease;
 	}
 
 	.back-link:hover {
-		color: var(--accent);
-		border-color: var(--accent);
+		color: var(--text-color);
 		transform: translateX(-2px);
 	}
 
@@ -318,70 +318,50 @@ ${bodyText}
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
-		gap: 0.5rem;
-		font-size: 0.85rem;
+		gap: 0.55rem;
+		font-size: 0.825rem;
 		color: var(--text-muted);
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.85rem;
 	}
 
-	.history-badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		padding: 0.15rem 0.55rem;
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: var(--text-muted);
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-full);
-		text-decoration: none !important;
-		transition: all 0.2s ease;
-		margin-left: 0.2rem;
+	.meta-sep {
+		color: var(--text-subtle);
+		opacity: 0.6;
+		user-select: none;
 	}
 
-	.history-badge:hover {
-		color: var(--accent);
-		border-color: var(--accent);
-		background: var(--card-hover);
-		transform: translateY(-1px);
-	}
-
+	.history-badge,
 	.copy-ai-badge {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.35rem;
-		padding: 0.15rem 0.6rem;
-		font-size: 0.75rem;
+		gap: 0.3rem;
+		padding: 0;
+		font-size: 0.825rem;
 		font-weight: 500;
 		color: var(--text-muted);
-		background: var(--card-bg);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-full);
+		background: transparent;
+		border: none;
 		cursor: pointer;
 		font-family: inherit;
-		transition: all 0.2s ease;
-		margin-left: 0.2rem;
+		text-decoration: none !important;
+		transition: color 0.2s ease;
 	}
 
+	.history-badge:hover,
 	.copy-ai-badge:hover {
-		color: var(--accent);
-		border-color: var(--accent);
-		background: var(--card-hover);
-		transform: translateY(-1px);
+		color: var(--text-color);
 	}
 
 	.copy-ai-badge.copied {
 		color: #10b981 !important;
-		border-color: #10b981 !important;
-		background: rgba(16, 185, 129, 0.1) !important;
 	}
 
 	.article-title {
-		font-size: 1.95rem;
+		font-size: 2.1rem;
 		font-weight: 800;
 		letter-spacing: -0.025em;
 		line-height: 1.3;
+		color: var(--text-color);
 		margin: 0 0 0.75rem 0;
 	}
 
@@ -411,9 +391,9 @@ ${bodyText}
 	}
 
 	.article-footer-info {
-		margin: 2rem 0 3.5rem;
+		margin: 3rem 0 3.5rem;
 		padding-top: 1.5rem;
-		border-top: 1px dashed var(--border-subtle);
+		border-top: 1px solid var(--border-subtle);
 	}
 
 	.revision-box {
@@ -422,64 +402,39 @@ ${bodyText}
 		justify-content: space-between;
 		flex-wrap: wrap;
 		gap: 1rem;
-		padding: 1rem 1.25rem;
-		background: var(--card-bg);
-		border: 1px solid var(--border-subtle);
-		border-radius: var(--radius-md);
-		transition: border-color 0.2s ease, box-shadow 0.2s ease;
-	}
-
-	.revision-box:hover {
-		border-color: var(--accent);
-		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-	}
-
-	.revision-meta {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-		flex: 1;
-		min-width: 240px;
-	}
-
-	.revision-label {
-		font-size: 0.78rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--accent);
+		padding: 0;
+		background: transparent;
+		border: none;
 	}
 
 	.revision-desc {
 		font-size: 0.85rem;
 		color: var(--text-muted);
-		line-height: 1.5;
+		line-height: 1.6;
+		margin: 0;
 	}
 
 	.history-btn {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.45rem;
-		padding: 0.5rem 0.95rem;
-		font-size: 0.825rem;
-		font-weight: 600;
-		color: var(--text-color) !important;
-		background: var(--card-hover);
-		border: 1px solid var(--border-color);
-		border-radius: var(--radius-sm);
+		gap: 0.35rem;
+		padding: 0;
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: var(--text-muted) !important;
+		background: transparent;
+		border: none;
 		text-decoration: none !important;
-		transition: all 0.2s ease;
+		transition: color 0.2s ease;
 		white-space: nowrap;
 	}
 
 	.history-btn:hover {
-		color: var(--accent) !important;
-		border-color: var(--accent);
-		transform: translateY(-1px);
+		color: var(--text-color) !important;
 	}
 
 	.btn-arrow {
-		font-size: 0.95rem;
+		font-size: 0.85rem;
 		transition: transform 0.2s ease;
 	}
 
