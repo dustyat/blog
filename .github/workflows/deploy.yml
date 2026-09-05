@@ -41,24 +41,30 @@ jobs:
           gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Sync images to Cloudflare R2
-        if: secrets.R2_ACCOUNT_ID != '' && secrets.R2_ACCESS_KEY_ID != ''
         env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
         run: |
+          if [ -z "$R2_ACCOUNT_ID" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$R2_BUCKET_NAME" ]; then
+            echo "⚠️ 未完整配置 R2 相关 Secrets，跳过图片增量同步。"
+            exit 0
+          fi
+
           # 1. 增量同步 attachments 目录（如果存在）
           if [ -d "./attachments" ]; then
             echo "📦 正在增量同步 ./attachments 到 Cloudflare R2..."
-            aws s3 sync ./attachments s3://${{ secrets.R2_BUCKET_NAME }}/attachments \
-              --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
+            aws s3 sync ./attachments "s3://${R2_BUCKET_NAME}/attachments" \
+              --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com" \
               --no-progress
           fi
           # 2. 增量同步 src/assets 下的图片附件（排除字体文件）
           if [ -d "./src/assets" ]; then
             echo "📦 正在增量同步 ./src/assets 图片附件到 Cloudflare R2..."
-            aws s3 sync ./src/assets s3://${{ secrets.R2_BUCKET_NAME }}/attachments \
-              --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
+            aws s3 sync ./src/assets "s3://${R2_BUCKET_NAME}/attachments" \
+              --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com" \
               --exclude "*" \
               --include "*.png" --include "*.jpg" --include "*.jpeg" \
               --include "*.gif" --include "*.webp" --include "*.svg" --include "*.avif" \
