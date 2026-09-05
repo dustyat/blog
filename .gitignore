@@ -25,3 +25,8 @@ pnpm-debug.log*
 
 # obsidian vault settings/cache
 .obsidian/
+
+# python cache
+__pycache__/
+*.py[cod]
+

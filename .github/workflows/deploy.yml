@@ -40,6 +40,47 @@ jobs:
         run: |
           gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
+      - name: Sync images to Cloudflare R2
+        if: secrets.R2_ACCOUNT_ID != '' && secrets.R2_ACCESS_KEY_ID != ''
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          # 1. 增量同步 attachments 目录（如果存在）
+          if [ -d "./attachments" ]; then
+            echo "📦 正在增量同步 ./attachments 到 Cloudflare R2..."
+            aws s3 sync ./attachments s3://${{ secrets.R2_BUCKET_NAME }}/attachments \
+              --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
+              --no-progress
+          fi
+          # 2. 增量同步 src/assets 下的图片附件（排除字体文件）
+          if [ -d "./src/assets" ]; then
+            echo "📦 正在增量同步 ./src/assets 图片附件到 Cloudflare R2..."
+            aws s3 sync ./src/assets s3://${{ secrets.R2_BUCKET_NAME }}/attachments \
+              --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com \
+              --exclude "*" \
+              --include "*.png" --include "*.jpg" --include "*.jpeg" \
+              --include "*.gif" --include "*.webp" --include "*.svg" --include "*.avif" \
+              --no-progress
+          fi
+
+      - name: Set up Python for asset link replacement
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Replace asset links with Cloudflare R2 URLs
+        env:
+          R2_CDN_BASE_URL: ${{ secrets.R2_CDN_BASE_URL || vars.R2_CDN_BASE_URL }}
+          POSTS_DIR: ./src/content/blog
+        run: |
+          if [ -n "$R2_CDN_BASE_URL" ]; then
+            python scripts/sync_and_replace_assets.py --verbose
+          else
+            echo "⚠️ 未检测到 R2_CDN_BASE_URL 配置，跳过图片链接替换环节。"
+          fi
+
       - name: Build and Tag Docker Image
         run: |
           IMAGE_TAG="${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.GAR_REPOSITORY }}/${{ env.SERVICE_NAME }}"

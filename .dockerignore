@@ -9,3 +9,26 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# 本地大体积图片附件（已由 CI 同步至 Cloudflare R2 并替换为 CDN 链接）
+attachments/
+**/attachments/
+src/content/blog/attachments/
+src/assets/**/*.png
+src/assets/**/*.jpg
+src/assets/**/*.jpeg
+src/assets/**/*.webp
+src/assets/**/*.avif
+src/assets/**/*.gif
+
+# 白名单保护：站点必备图标、字体及示例占位图
+!public/**
+!src/assets/fonts/**
+!src/assets/blog-placeholder-*
+
+# 测试与临时缓存
+tests/
+__pycache__/
+*.py[cod]
+
+
