@@ -4,33 +4,53 @@ import Layout from '../layouts/BlogPost.astro';
 
 <Layout
 	title="关于本站 & 关于我"
-	description="关于博主、技术栈与本站的构建理念"
-	pubDate={new Date('2026-01-01')}
+	description="关于博主 Dusty、技术栈演进与本站的工程构建理念"
+	pubDate={new Date('2026-09-01')}
+	updatedDate={new Date('2026-09-05')}
 >
-	<h2>👋 你好，我是博主</h2>
+	<h2>👋 你好，我是 Dusty</h2>
 	<p>
-		欢迎来到我的个人博客。我是一名热爱探索新技术、专注于云原生、全栈架构与自动化工具链的工程师与创作者。
+		欢迎来到我的个人独立技术博客。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
+	</p>
+	<p>
+		我相信<strong>“工欲善其事，必先利其器”</strong>。本站不仅是我输出思考与技术干货的阵地，也是我将现代工程实践落地演练的试验田。
 	</p>
 
-	<h2>🛠️ 本站技术栈</h2>
+	<h2>🛠️ 本站现代工程技术栈</h2>
 	<ul>
-		<li><strong>框架</strong>：<a href="https://astro.build/" target="_blank">Astro</a>（极速静态生成，零运行时负担）</li>
-		<li><strong>容器化</strong>：Docker 多阶段构建 + Alpine Nginx 镜像</li>
-		<li><strong>云平台</strong>：Google Cloud Run（无服务器容器化托管，自动缩容到 0 实例）</li>
-		<li><strong>CI/CD</strong>：GitHub Actions（Git Push 自动构建与部署）</li>
-		<li><strong>设计风格</strong>：2026 现代极简设计、支持自动深色/浅色模式切换</li>
+		<li>
+			<strong>核心框架</strong>：<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro v5</a>（Content Collections 内容集合强类型驱动，零 JS 运行时极速体验）
+		</li>
+		<li>
+			<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 流量出口费，全球 CDN 边缘节点强劲加速）
+		</li>
+		<li>
+			<strong>本地写作工作流</strong>：<a href="https://obsidian.md/" target="_blank" rel="noopener noreferrer">Obsidian</a>（本地纯 Markdown 写作，物理附件离线无感留存，Git 即刻发布）
+		</li>
+		<li>
+			<strong>容器与生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（排除图片物理文件，极致精简打包体积）
+		</li>
+		<li>
+			<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持自动缩容至 0 实例）
+		</li>
+		<li>
+			<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥凭证认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
+		</li>
+		<li>
+			<strong>AI 知识引擎优化 (GEO)</strong>：全站原生提供 <code>/llms.txt</code> 与 <code>/llms-full.txt</code>，支持一键复制 AI 结构化权威引用提示词
+		</li>
 	</ul>
 
-	<h2>💡 创作理念</h2>
+	<h2>💡 构建理念</h2>
 	<blockquote>
-		"清晰的思考来源于不断的输出与实践。把复杂的技术拆解为优雅、简洁的实现。"
+		“清晰的思考来源于持续的输出与实践。把复杂的架构拆解为优雅、自洽且健壮的极简实现。”
 	</blockquote>
 	<p>
-		在这个博客里，我会持续分享在日常开发、架构设计、效率工具与自动化实践中的心得。希望这里的文字能对你有所启发。
+		在这个博客里，你会看到一手实战的技术架构总结、性能极致调优记录、开发效率工具链折腾心得，以及对现代软件工程的思考。
 	</p>
 
 	<h2>📬 联系与交流</h2>
 	<p>
-		如果你对本站内容有任何疑问或想交流技术，欢迎通过 GitHub 或社交平台与我联系！
+		如果你对本站文章有任何想法、探讨或建议，欢迎在 GitHub 提交 Issue，或通过 Mastodon / 社交网络与我互动！
 	</p>
 </Layout>

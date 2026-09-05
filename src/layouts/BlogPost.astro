@@ -152,7 +152,11 @@ const effectiveLlmDirective = llmPrompt
 				{
 					heroImage && (
 						<div class="hero-image-wrapper">
-							<Image width={1020} height={510} src={heroImage} alt={title} class="hero-img" />
+							{typeof heroImage === 'string' ? (
+								<img width={1020} height={510} src={heroImage} alt={title} class="hero-img" loading="lazy" />
+							) : (
+								<Image width={1020} height={510} src={heroImage} alt={title} class="hero-img" />
+							)}
 						</div>
 					)
 				}
