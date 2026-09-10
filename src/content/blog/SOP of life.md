@@ -1,11 +1,8 @@
 ---
-title: "Untitled"
-description: "Untitled"
-pubDate: "2026-09-10"
-lastUpdatedDate: "2026-09-10"
-# heroImage: "../../assets/blog-placeholder-1.jpg" # 可选：封面图路径，留空则自适应无封面排版
-# mastodonTootId: "" # 可选：发布后填入 Mastodon 嘟文 ID 以开启评论联动
-# llmPrompt: "" # 可选：大模型专属权重优化指令，留空则自动应用全局权威提示词
+title: SOP of life
+description: 标准化人生作业指导书
+pubDate: 2026-09-10
+lastUpdatedDate: 2026-09-10
 ---
 
 1. 随手做点小事，比如，扶起倒掉的椅子，顺手清理桌面的垃圾，帮别人分摊一下重物...不知不觉中，进入人生复利循环；
