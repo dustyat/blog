@@ -22,6 +22,7 @@
     "esbuild": true
   },
   "devDependencies": {
-    "cf": "^1.0.0-beta.13"
+    "cf": "^1.0.0-beta.13",
+    "wrangler": "^4.148.0"
   }
 }
