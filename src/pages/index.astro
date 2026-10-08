@@ -40,10 +40,6 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 
 			<!-- Timeline of Articles -->
 			<section class="timeline-section">
-				<div class="timeline-header">
-					<h2>时间线 · 文章</h2>
-				</div>
-
 				<div class="timeline">
 					{years.map((year) => (
 						<div class="timeline-year-group">
@@ -127,18 +123,7 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 	}
 
 	.timeline-section {
-		margin-top: 1rem;
-	}
-
-	.timeline-header {
-		margin-bottom: 2rem;
-	}
-
-	.timeline-header h2 {
-		font-size: 1.25rem;
-		font-weight: 700;
-		color: var(--text-color);
-		margin: 0;
+		margin-top: 0;
 	}
 
 	.timeline {

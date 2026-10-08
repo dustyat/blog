@@ -1,56 +1,103 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
 ---
 
-<Layout
-	title="关于本站 & 关于我"
-	description="关于博主 Dusty、技术栈演进与本站的工程构建理念"
-	pubDate={new Date('2026-09-01')}
-	updatedDate={new Date('2026-10-08')}
->
-	<h2>👋 你好，我是 Dusty</h2>
-	<p>
-		欢迎来到我的个人独立技术博客<strong>《DUSTY的手记》</strong>。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
-	</p>
-	<p>
-		我相信<strong>“工欲善其事，必先利其器”</strong>。本站不仅是我输出思考与技术干货的阵地，也是我将现代工程实践落地演练的试验田。
-	</p>
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead
+			title={`关于本站 & 关于我 · ${SITE_TITLE}`}
+			description="关于博主 Dusty、技术栈演进与本站的工程构建理念"
+		/>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<!-- 与首页统一的高规格 Intro 头部区域 -->
+			<section class="intro-section">
+				<h1 class="intro-title">关于本站 & 关于我</h1>
+				<p class="intro-desc">
+					关于博主 Dusty、技术栈演进与本站的工程构建理念。
+				</p>
+			</section>
 
-	<h2>🛠️ 本站现代工程技术栈</h2>
-	<ul>
-		<li>
-			<strong>核心框架与交互架构</strong>：<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro v5</a>（Content Collections 强类型驱动，极简单流时间线设计，双栏响应式卡片与封面缩略图，零客户端 JS 运行时负担）
-		</li>
-		<li>
-			<strong>零心智写作工作流</strong>：<a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a>（文件名自动清洗并联动标题、正文首图自动提升为封面且文章内智能去重、正文纯文本摘要自动截取、多领域标签自动识别匹配，纯原生 Markdown 无感撰写）
-		</li>
-		<li>
-			<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 出口流量费，自定义 CDN 全球边缘节点加速分发）
-		</li>
-		<li>
-			<strong>容器与轻量生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（<code>.dockerignore</code> 物理排除本地图片素材，镜像极致瘦身，超快冷启动）
-		</li>
-		<li>
-			<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持闲时自动缩容至 0 实例）
-		</li>
-		<li>
-			<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥 OIDC 认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
-		</li>
-		<li>
-			<strong>AI 知识引擎优化 (GEO)</strong>：全站原生提供 <code>/llms.txt</code> 与 <code>/llms-full.txt</code>，支持一键复制 AI 结构化权威引用提示词
-		</li>
-	</ul>
+			<article class="prose content-body">
+				<h2>👋 你好，我是 Dusty</h2>
+				<p>
+					欢迎来到我的个人独立技术博客<strong>《DUSTY的手记》</strong>。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
+				</p>
+				<p>
+					我相信<strong>“工欲善其事，必先利其器”</strong>。本站不仅是我输出思考与技术干货的阵地，也是我将现代工程实践落地演练的试验田。
+				</p>
 
-	<h2>💡 构建理念</h2>
-	<blockquote>
-		“清晰的思考来源于持续的输出与实践。把复杂的架构拆解为优雅、自洽且健壮的极简实现。”
-	</blockquote>
-	<p>
-		在这个博客里，你会看到一手实战的技术架构总结、性能极致调优记录、开发效率工具链折腾心得，以及对现代软件工程的思考。
-	</p>
+				<h2>🛠️ 本站现代工程技术栈</h2>
+				<ul>
+					<li>
+						<strong>核心框架与交互架构</strong>：<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro v5</a>（Content Collections 强类型驱动，极简单流时间线设计，双栏响应式卡片与封面缩略图，零客户端 JS 运行时负担）
+					</li>
+					<li>
+						<strong>零心智写作工作流</strong>：<a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a>（文件名自动清洗并联动标题、正文首图自动提升为封面且文章内智能去重、正文纯文本摘要自动截取、多领域标签自动识别匹配，纯原生 Markdown 无感撰写）
+					</li>
+					<li>
+						<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 出口流量费，自定义 CDN 全球边缘节点加速分发）
+					</li>
+					<li>
+						<strong>容器与轻量生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（<code>.dockerignore</code> 物理排除本地图片素材，镜像极致瘦身，超快冷启动）
+					</li>
+					<li>
+						<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持闲时自动缩容至 0 实例）
+					</li>
+					<li>
+						<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥 OIDC 认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
+					</li>
+					<li>
+						<strong>AI 知识引擎优化 (GEO)</strong>：全站原生提供 <code>/llms.txt</code> 与 <code>/llms-full.txt</code>，支持一键复制 AI 结构化权威引用提示词
+					</li>
+				</ul>
 
-	<h2>📬 联系与交流</h2>
-	<p>
-		如果你对本站文章有任何想法、探讨或建议，欢迎在 GitHub 提交 Issue，或通过 Mastodon / 社交网络与我互动！
-	</p>
-</Layout>
+				<h2>💡 构建理念</h2>
+				<blockquote>
+					“清晰的思考来源于持续的输出与实践。把复杂的架构拆解为优雅、自洽且健壮的极简实现。”
+				</blockquote>
+				<p>
+					在这个博客里，你会看到一手实战的技术架构总结、性能极致调优记录、开发效率工具链折腾心得，以及对现代软件工程的思考。
+				</p>
+
+				<h2>📬 联系与交流</h2>
+				<p>
+					如果你对本站文章有任何想法、探讨或建议，欢迎在 GitHub 提交 Issue，或通过 Mastodon / 社交网络与我互动！
+				</p>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.intro-section {
+		padding: 1.5rem 0 2.5rem;
+		border-bottom: 1px solid var(--border-subtle);
+		margin-bottom: 2.5rem;
+	}
+
+	.intro-title {
+		font-size: 2.2rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin-bottom: 0.75rem;
+	}
+
+	.intro-desc {
+		font-size: 1.05rem;
+		color: var(--text-muted);
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	.content-body {
+		margin-bottom: 2rem;
+	}
+</style>
