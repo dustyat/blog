@@ -21,7 +21,9 @@ const normalize = (path: string) => {
 const current = normalize(pathname) || '/';
 const target = normalize(String(href)) || '/';
 
-const isActive = target === '/' ? current === '/' : (current === target || current.startsWith(target + '/'));
+const isActive = target === '/'
+	? (current === '/' || current.startsWith('/blog'))
+	: (current === target || current.startsWith(target + '/'));
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>

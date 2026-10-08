@@ -6,11 +6,11 @@ import Layout from '../layouts/BlogPost.astro';
 	title="关于本站 & 关于我"
 	description="关于博主 Dusty、技术栈演进与本站的工程构建理念"
 	pubDate={new Date('2026-09-01')}
-	updatedDate={new Date('2026-09-05')}
+	updatedDate={new Date('2026-10-08')}
 >
 	<h2>👋 你好，我是 Dusty</h2>
 	<p>
-		欢迎来到我的个人独立技术博客。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
+		欢迎来到我的个人独立技术博客<strong>《DUSTY的手记》</strong>。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
 	</p>
 	<p>
 		我相信<strong>“工欲善其事，必先利其器”</strong>。本站不仅是我输出思考与技术干货的阵地，也是我将现代工程实践落地演练的试验田。
@@ -19,22 +19,22 @@ import Layout from '../layouts/BlogPost.astro';
 	<h2>🛠️ 本站现代工程技术栈</h2>
 	<ul>
 		<li>
-			<strong>核心框架</strong>：<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro v5</a>（Content Collections 内容集合强类型驱动，零 JS 运行时极速体验）
+			<strong>核心框架与交互架构</strong>：<a href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro v5</a>（Content Collections 强类型驱动，极简单流时间线设计，双栏响应式卡片与封面缩略图，零客户端 JS 运行时负担）
 		</li>
 		<li>
-			<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 流量出口费，全球 CDN 边缘节点强劲加速）
+			<strong>零心智写作工作流</strong>：<a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a>（文件名自动清洗并联动标题、正文首图自动提升为封面且文章内智能去重、正文纯文本摘要自动截取、多领域标签自动识别匹配，纯原生 Markdown 无感撰写）
 		</li>
 		<li>
-			<strong>本地写作工作流</strong>：<a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">VS Code</a>（本地纯 Markdown 写作，物理附件离线无感留存，Git 即刻发布）
+			<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 出口流量费，自定义 CDN 全球边缘节点加速分发）
 		</li>
 		<li>
-			<strong>容器与生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（排除图片物理文件，极致精简打包体积）
+			<strong>容器与轻量生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（<code>.dockerignore</code> 物理排除本地图片素材，镜像极致瘦身，超快冷启动）
 		</li>
 		<li>
-			<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持自动缩容至 0 实例）
+			<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持闲时自动缩容至 0 实例）
 		</li>
 		<li>
-			<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥凭证认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
+			<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥 OIDC 认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
 		</li>
 		<li>
 			<strong>AI 知识引擎优化 (GEO)</strong>：全站原生提供 <code>/llms.txt</code> 与 <code>/llms-full.txt</code>，支持一键复制 AI 结构化权威引用提示词

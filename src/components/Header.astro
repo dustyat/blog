@@ -5,14 +5,19 @@ import ThemeToggle from './ThemeToggle.astro';
 
 <header class="header">
 	<nav class="nav-container">
-		<div class="nav-links">
-			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/blog/">文章</HeaderLink>
-			<HeaderLink href="/about/">关于</HeaderLink>
-		</div>
+		<a href="/" class="site-brand">
+			<span class="brand-text">DUSTY的手记</span>
+		</a>
 
-		<div class="nav-actions">
-			<ThemeToggle />
+		<div class="nav-right">
+			<div class="nav-links">
+				<HeaderLink href="/">文章</HeaderLink>
+				<HeaderLink href="/about/">关于</HeaderLink>
+			</div>
+
+			<div class="nav-actions">
+				<ThemeToggle />
+			</div>
 		</div>
 	</nav>
 </header>
@@ -42,35 +47,36 @@ import ThemeToggle from './ThemeToggle.astro';
 		transition: border-color 0.25s ease;
 	}
 
+	.site-brand {
+		display: flex;
+		align-items: center;
+		text-decoration: none;
+		color: var(--text-color);
+		font-weight: 700;
+		font-size: 1.05rem;
+		letter-spacing: -0.01em;
+		transition: color 0.15s ease, opacity 0.15s ease;
+	}
+
+	.site-brand:hover {
+		color: var(--accent);
+	}
+
+	.nav-right {
+		display: flex;
+		align-items: center;
+		gap: 1.4rem;
+	}
+
 	.nav-links {
 		display: flex;
 		align-items: center;
-		gap: 1.6rem;
+		gap: 1.25rem;
 	}
 
 	.nav-actions {
 		display: flex;
 		align-items: center;
-		gap: 0.6rem;
-	}
-
-	.action-icon {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		border: 1px solid var(--border-color);
-		background: var(--card-bg);
-		color: var(--text-muted);
-		transition: all 0.2s ease;
-	}
-
-	.action-icon:hover {
-		color: var(--accent);
-		border-color: var(--accent);
-		transform: scale(1.05);
 	}
 
 	@media (max-width: 640px) {
@@ -79,6 +85,9 @@ import ThemeToggle from './ThemeToggle.astro';
 		}
 		.nav-container {
 			padding: 0.75rem 0;
+		}
+		.nav-right {
+			gap: 1rem;
 		}
 	}
 </style>
