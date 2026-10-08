@@ -4,9 +4,9 @@
   "markdown.editor.filePaste.copyIntoWorkspace": "mediaFiles",
   "markdown.editor.drop.copyIntoWorkspace": "mediaFiles",
 
-  // 截图粘贴时，自动统一保存至当前工作区下的 attachments 目录
+  // 截图粘贴时，自动将图片命名包含文章名（${documentBaseName}）并统一归类
   "markdown.copyFiles.destination": {
-    "**/*": "${documentWorkspaceFolder}/attachments/${fileName}"
+    "**/*": "${documentWorkspaceFolder}/attachments/${documentBaseName}/${documentBaseName}-${fileName}"
   },
 
   // 粘贴网址时智能转为 Markdown 超链接
