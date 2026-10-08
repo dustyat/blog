@@ -9,10 +9,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(PROJECT_ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-try:
-    from scripts.sync_and_replace_assets import replace_images_in_content
-except ImportError:
-    from sync_and_replace_assets import replace_images_in_content
+from scripts.sync_and_replace_assets import replace_images_in_content
 
 
 class TestImageReplacement(unittest.TestCase):
