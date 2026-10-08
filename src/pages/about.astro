@@ -16,18 +16,10 @@ import { SITE_TITLE } from '../consts';
 	<body>
 		<Header />
 		<main>
-			<!-- 与首页统一的高规格 Intro 头部区域 -->
-			<section class="intro-section">
-				<h1 class="intro-title">关于本站 & 关于我</h1>
-				<p class="intro-desc">
-					关于博主 Dusty、技术栈演进与本站的工程构建理念。
-				</p>
-			</section>
-
+			<h1 class="sr-only">关于 - {SITE_TITLE}</h1>
 			<article class="prose content-body">
-				<h2>👋 你好，我是 Dusty</h2>
 				<p>
-					欢迎来到我的个人独立技术博客<strong>《DUSTY的手记》</strong>。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
+					欢迎来到我的个人独立技术博客<strong>《dusty's blog》</strong>。我是一名专注于全栈研发、云原生架构、现代 Web 性能工程与自动化工具链的工程师与创作者。
 				</p>
 				<p>
 					我相信<strong>“工欲善其事，必先利其器”</strong>。本站不仅是我输出思考与技术干货的阵地，也是我将现代工程实践落地演练的试验田。
@@ -77,27 +69,8 @@ import { SITE_TITLE } from '../consts';
 </html>
 
 <style>
-	.intro-section {
-		padding: 1.5rem 0 2.5rem;
-		border-bottom: 1px solid var(--border-subtle);
-		margin-bottom: 2.5rem;
-	}
-
-	.intro-title {
-		font-size: 2.2rem;
-		font-weight: 800;
-		letter-spacing: -0.03em;
-		margin-bottom: 0.75rem;
-	}
-
-	.intro-desc {
-		font-size: 1.05rem;
-		color: var(--text-muted);
-		line-height: 1.6;
-		margin: 0;
-	}
-
 	.content-body {
+		padding-top: 0.5rem;
 		margin-bottom: 2rem;
 	}
 </style>

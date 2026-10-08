@@ -78,16 +78,17 @@ const jsonLd = {
 		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
 			return localStorage.getItem('theme');
 		}
-		if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			return 'dark';
-		}
-		return 'light';
+		return 'white';
 	})();
 
 	if (theme === 'dark') {
 		document.documentElement.setAttribute('data-theme', 'dark');
+	} else if (theme === 'warm') {
+		document.documentElement.setAttribute('data-theme', 'warm');
+	} else if (theme === 'cream') {
+		document.documentElement.setAttribute('data-theme', 'cream');
 	} else {
-		document.documentElement.setAttribute('data-theme', 'light');
+		document.documentElement.setAttribute('data-theme', 'white');
 	}
 	window.localStorage.setItem('theme', theme);
 </script>

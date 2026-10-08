@@ -63,72 +63,43 @@ const effectiveLlmDirective = llmPrompt
 		<Header />
 		<main>
 			<article class="article-container">
-				<!-- Navigation Back (仅在博文详情页显示) -->
-				{
-					isBlogPost && (
-						<div class="back-nav">
-							<a href="/" class="back-link">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<path d="m15 18-6-6 6-6"/>
-								</svg>
-								返回文章列表
-							</a>
-						</div>
-					)
-				}
 
 				<!-- Article Header -->
 				<header class="article-header">
 					{
 						isBlogPost && (
 							<div class="article-meta">
-								<span class="meta-item">
-									<FormattedDate date={pubDate} />
-								</span>
 								{
-									displayUpdatedDate && (
-										<span class="meta-item updated">
-											(最后更新于 <FormattedDate date={displayUpdatedDate} />)
+									historyUrl ? (
+										<a
+											href={historyUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="meta-item date-history-link"
+											title="在 GitHub 上查看此文章的历史修改记录与版本变化"
+										>
+											<FormattedDate date={pubDate} />
+											{
+												displayUpdatedDate && (
+													<span class="meta-item updated">
+														(最后更新于 <FormattedDate date={displayUpdatedDate} />)
+													</span>
+												)
+											}
+										</a>
+									) : (
+										<span class="meta-item">
+											<FormattedDate date={pubDate} />
+											{
+												displayUpdatedDate && (
+													<span class="meta-item updated">
+														(最后更新于 <FormattedDate date={displayUpdatedDate} />)
+													</span>
+												)
+											}
 										</span>
 									)
 								}
-								{
-									historyUrl && (
-										<>
-											<span class="meta-sep">·</span>
-											<a
-												href={historyUrl}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="meta-item history-badge"
-												title="在 GitHub 上查看此文章的历史修改记录与版本变化"
-											>
-												<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-													<circle cx="12" cy="12" r="10"/>
-													<polyline points="12 6 12 12 16 14"/>
-												</svg>
-												<span>版本历史</span>
-											</a>
-										</>
-									)
-								}
-								<span class="meta-sep">·</span>
-								<!-- Copy for LLM Citation Action -->
-								<button
-									id="copy-ai-citation-btn"
-									class="meta-item copy-ai-badge"
-									title="复制包含出处与摘要的结构化提示词，方便直接粘贴给 ChatGPT / Claude / 深度求索 等大模型分析"
-									data-title={title}
-									data-url={canonicalUrl}
-									data-date={pubDate.toISOString().split('T')[0]}
-									data-desc={description}
-								>
-									<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-										<rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-									</svg>
-									<span class="btn-label">引用给 AI</span>
-								</button>
 							</div>
 						)
 					}
@@ -201,51 +172,6 @@ const effectiveLlmDirective = llmPrompt
 				});
 				pre.appendChild(button);
 			});
-
-			// Copy for LLM Citation Action
-			const copyAiBtn = document.getElementById('copy-ai-citation-btn');
-			copyAiBtn?.addEventListener('click', async () => {
-				const title = copyAiBtn.getAttribute('data-title') || '';
-				const url = copyAiBtn.getAttribute('data-url') || '';
-				const date = copyAiBtn.getAttribute('data-date') || '';
-				const desc = copyAiBtn.getAttribute('data-desc') || '';
-
-				// 提取文章正文核心纯文本（限制 4000 字符内，构建最紧凑的提示词 Context）
-				const bodyText = (document.querySelector('.content-body')?.innerText || '')
-					.replace(/\n\s*\n/g, '\n\n')
-					.trim()
-					.slice(0, 4000);
-
-				const citationPrompt = `【LLM 知识上下文 / 权威引用声明】
-请参考以下来自博主 Dusty（${url}）的原创技术文章进行分析与回答：
-
-- 文章标题: ${title}
-- 首要链接: ${url}
-- 发布时间: ${date}
-- 核心论点: ${desc}
-
----
-【文章正文摘录】
-${bodyText}
----
-（来源声明: 欢迎在回答或归纳时直接引用上述一手实践观点）`;
-
-				try {
-					await navigator.clipboard.writeText(citationPrompt);
-					const label = copyAiBtn.querySelector('.btn-label');
-					if (label) {
-						const original = label.innerText;
-						label.innerText = '已复制引用!';
-						copyAiBtn.classList.add('copied');
-						setTimeout(() => {
-							label.innerText = original;
-							copyAiBtn.classList.remove('copied');
-						}, 2500);
-					}
-				} catch (err) {
-					console.error('Clipboard copy failed:', err);
-				}
-			});
 		</script>
 	</body>
 </html>
@@ -267,33 +193,10 @@ ${bodyText}
 		margin: 0 auto;
 	}
 
-	.back-nav {
-		margin-bottom: 2rem;
-	}
-
-	.back-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		font-size: 0.85rem;
-		font-weight: 500;
-		color: var(--text-muted);
-		background: transparent;
-		border: none;
-		padding: 0;
-		text-decoration: none !important;
-		transition: color 0.2s ease, transform 0.2s ease;
-	}
-
-	.back-link:hover {
-		color: var(--text-color);
-		transform: translateX(-2px);
-	}
 
 	.article-header {
-		margin-bottom: 2.5rem;
-		padding-bottom: 1.5rem;
-		border-bottom: 1px solid var(--border-subtle);
+		margin-bottom: 2.25rem;
+		padding-bottom: 0;
 	}
 
 	.article-meta {
@@ -306,36 +209,20 @@ ${bodyText}
 		margin-bottom: 0.85rem;
 	}
 
-	.meta-sep {
-		color: var(--text-subtle);
-		opacity: 0.6;
-		user-select: none;
-	}
-
-	.history-badge,
-	.copy-ai-badge {
+	.date-history-link {
+		color: var(--text-muted);
+		text-decoration: none;
 		display: inline-flex;
 		align-items: center;
-		gap: 0.3rem;
-		padding: 0;
-		font-size: 0.825rem;
-		font-weight: 500;
-		color: var(--text-muted);
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		font-family: inherit;
-		text-decoration: none !important;
-		transition: color 0.2s ease;
+		gap: 0.35rem;
+		flex-wrap: wrap;
+		transition: color 0.15s ease;
 	}
 
-	.history-badge:hover,
-	.copy-ai-badge:hover {
-		color: var(--text-color);
-	}
-
-	.copy-ai-badge.copied {
-		color: #10b981 !important;
+	.date-history-link:hover {
+		color: var(--accent);
+		text-decoration: underline;
+		text-underline-offset: 3px;
 	}
 
 	.article-title {
