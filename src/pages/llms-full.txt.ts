@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getPostDescription } from '../utils/post';
 
 export const GET: APIRoute = async (context) => {
 	const siteUrl = (context.site?.toString() || 'https://blog.dustyat.com').replace(/\/$/, '');
@@ -13,12 +14,13 @@ export const GET: APIRoute = async (context) => {
 			const dateStr = post.data.pubDate.toISOString().split('T')[0];
 			const postUrl = `${siteUrl}/blog/${post.id}/`;
 			const bodyContent = post.body || '';
+			const desc = getPostDescription(post);
 
 			return `================================================================================
 # 文章标题: ${post.data.title}
 - 原始链接: ${postUrl}
 - 发布时间: ${dateStr}
-- 核心摘要: ${post.data.description}
+- 核心摘要: ${desc}
 ================================================================================
 
 ${bodyContent.trim()}
