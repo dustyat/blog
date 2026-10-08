@@ -1,6 +1,5 @@
 {
   "Astro Blog Frontmatter": {
-    "scope": "markdown,mdx",
     "prefix": "post",
     "description": "Insert Astro blog post frontmatter template",
     "body": [

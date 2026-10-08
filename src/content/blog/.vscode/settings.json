@@ -10,5 +10,18 @@
   },
 
   // 粘贴网址时智能转为 Markdown 超链接
-  "markdown.editor.pasteUrlAsFormattedLink.enabled": "smart"
+  "markdown.editor.pasteUrlAsFormattedLink.enabled": "smart",
+
+  // 开启 Tab 键自动展开代码片段（输入 post 按 Tab 即可直接展开）
+  "editor.tabCompletion": "on",
+  "editor.snippetSuggestions": "top",
+
+  // 开启 Markdown 中的自动补全提示浮窗
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": "on",
+      "comments": "off",
+      "strings": "off"
+    }
+  }
 }
