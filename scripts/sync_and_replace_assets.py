@@ -109,7 +109,30 @@ def replace_images_in_content(
 
         text = parts[i]
 
-        # 替换标准 Markdown 相对路径图片: ![alt](path)
+        # 1. 替换 Frontmatter 中的 heroImage 相对路径（兼容直接粘贴的 ![]() 语法）
+        def hero_replacer(match: re.Match) -> str:
+            full_match = match.group(0)
+            prefix = match.group(1)
+            raw_val = match.group(2).strip().strip("'\"")
+
+            # 兼容用户直接粘贴的 Markdown 图片语法
+            md_match = re.match(r"!\[[^\]]*\]\(([^)\s]+)\)", raw_val)
+            img_path = md_match.group(1).strip() if md_match else raw_val
+
+            if is_external_url(img_path) or not is_image_file(img_path):
+                return full_match
+
+            norm_path = normalize_image_path(img_path)
+            target_url = build_cdn_url(cdn_base_url, norm_path)
+            new_syntax = f'{prefix}"{target_url}"'
+            replacements.append((full_match, new_syntax))
+            if verbose:
+                print(f"  [heroImage] {full_match} -> {new_syntax}")
+            return new_syntax
+
+        text = re.sub(r'(^heroImage:\s*)(.+)$', hero_replacer, text, flags=re.MULTILINE)
+
+        # 2. 替换标准 Markdown 相对路径图片: ![alt](path)
         def md_replacer(match: re.Match) -> str:
             full_match = match.group(0)
             alt_text = match.group(1)

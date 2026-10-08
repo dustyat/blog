@@ -90,6 +90,22 @@ After code: ![outside](./attachments/outside.png)
             self.assertEqual(len(reps), 1)
             self.assertIn(expected_url, new_content)
 
+    def test_hero_image_relative_path(self):
+        content = '---\ntitle: "Sample"\nheroImage: "./attachments/cover.png"\n---\nHello'
+        new_content, reps = replace_images_in_content(
+            content, self.cdn_base_url, self.fake_path
+        )
+        self.assertEqual(len(reps), 1)
+        self.assertIn('heroImage: "https://img.yourdomain.com/attachments/cover.png"', new_content)
+
+    def test_hero_image_markdown_paste_syntax(self):
+        content = '---\ntitle: "Sample"\nheroImage: "![](./attachments/cover.png)"\n---\nHello'
+        new_content, reps = replace_images_in_content(
+            content, self.cdn_base_url, self.fake_path
+        )
+        self.assertEqual(len(reps), 1)
+        self.assertIn('heroImage: "https://img.yourdomain.com/attachments/cover.png"', new_content)
+
 
 if __name__ == "__main__":
     unittest.main()

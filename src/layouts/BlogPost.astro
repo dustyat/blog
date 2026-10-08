@@ -10,6 +10,7 @@ import MastodonWidget from '../components/MastodonWidget.astro';
 type Props = CollectionEntry<'blog'>['data'] & {
 	slug?: string;
 	filePath?: string;
+	tags?: string[];
 };
 
 const {
@@ -19,6 +20,7 @@ const {
 	updatedDate,
 	lastUpdatedDate,
 	heroImage,
+	tags,
 	mastodonTootId,
 	llmPrompt,
 	slug,
@@ -47,6 +49,7 @@ const effectiveLlmDirective = llmPrompt
 		<BaseHead
 			title={title}
 			description={description}
+			image={heroImage}
 			article={{ pubDate, updatedDate: displayUpdatedDate, author: 'Dusty' }}
 		/>
 	</head>
@@ -129,6 +132,15 @@ const effectiveLlmDirective = llmPrompt
 					}
 					<h1 class="article-title">{title}</h1>
 					{description && <p class="article-desc">{description}</p>}
+					{
+						tags && tags.length > 0 && (
+							<div class="article-tags">
+								{tags.map((tag: string) => (
+									<span class="tag-badge">#{tag}</span>
+								))}
+							</div>
+						)
+					}
 				</header>
 
 				<!-- LLM GEO Dual-Layer Invisible Prompt (Layer 1: Semantic DOM Annotation) -->
@@ -374,6 +386,32 @@ ${bodyText}
 		color: var(--text-muted);
 		line-height: 1.6;
 		margin: 0;
+	}
+
+	.article-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.45rem;
+		margin-top: 0.85rem;
+	}
+
+	.tag-badge {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.18rem 0.55rem;
+		font-size: 0.775rem;
+		font-weight: 500;
+		color: var(--accent);
+		background: var(--card-hover);
+		border: 1px solid var(--border-subtle);
+		border-radius: var(--radius-sm);
+		letter-spacing: 0.01em;
+		transition: all 0.2s ease;
+	}
+
+	.tag-badge:hover {
+		background: var(--select-text-bg-color);
+		border-color: var(--border-color);
 	}
 
 	.hero-image-wrapper {

@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { getPostDescription } from '../utils/post';
+import { getPostDescription, getPostTags } from '../utils/post';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -64,6 +64,16 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 											{(() => {
 												const desc = getPostDescription(post);
 												return desc ? <p class="timeline-post-desc">{desc}</p> : null;
+											})()}
+											{(() => {
+												const tags = getPostTags(post);
+												return tags.length > 0 ? (
+													<div class="timeline-tags">
+														{tags.map((tag) => (
+															<span class="timeline-tag">#{tag}</span>
+														))}
+													</div>
+												) : null;
 											})()}
 										</div>
 									</article>
@@ -212,5 +222,28 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		color: var(--text-muted);
 		margin: 0;
 		line-height: 1.5;
+	}
+
+	.timeline-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		margin-top: 0.25rem;
+	}
+
+	.timeline-tag {
+		font-size: 0.725rem;
+		font-family: var(--font-mono);
+		color: var(--text-muted);
+		background: var(--card-hover);
+		padding: 0.1rem 0.45rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--border-subtle);
+		transition: all 0.2s ease;
+	}
+
+	.timeline-tag:hover {
+		color: var(--accent);
+		border-color: var(--border-color);
 	}
 </style>
