@@ -108,10 +108,9 @@ python -m unittest tests/test_sync_and_replace.py
 flowchart LR
     A[git push 触发] --> B[aws s3 sync 增量同步图片到 R2]
     B --> C[Python 脚本改写 Markdown 为 R2 链接]
-    C --> D[Docker 打包构建: 排除图片瘦身]
-    D --> E[推送镜像至 GCP Artifact Registry]
-    E --> F[部署到 Google Cloud Run 极速启动]
+    C --> D[Astro 静态编译输出 dist]
+    D --> E[Wrangler 直传至 Cloudflare 边缘网络]
 ```
 - **增量同步 (Fast Sync)**：`aws s3 sync` 自动比对文件大小与修改时间，仅上传新增或修改的图片。
 - **构建层无脏数据**：链接替换仅在 CI Runner 的临时工作区执行，不会提交回 GitHub 代码库。
-- **镜像极致瘦身**：本地图片已被 `.dockerignore` 排除，Cloud Run 镜像体积缩减，冷启动大幅加快。
+- **全球边缘零冷启动**：网页产物直传 Cloudflare 边缘网络分发，与 R2 图床同属一个 Anycast 生态，实现全站毫秒级秒开。

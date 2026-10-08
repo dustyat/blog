@@ -37,13 +37,10 @@ import { SITE_TITLE } from '../consts';
 						<strong>对象存储与图床</strong>：<a href="https://www.cloudflare.com/developer-platform/r2/" target="_blank" rel="noopener noreferrer">Cloudflare R2</a>（0 出口流量费，自定义 CDN 全球边缘节点加速分发）
 					</li>
 					<li>
-						<strong>容器与轻量生产运行</strong>：Docker 多阶段构建 + Alpine Nginx 极轻镜像（<code>.dockerignore</code> 物理排除本地图片素材，镜像极致瘦身，超快冷启动）
+						<strong>全球边缘托管与加速</strong>：<a href="https://workers.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare Workers & Static Assets</a>（300+ 全球边缘 Anycast 节点直出，零冷启动毫秒级秒开，自带自动免费 SSL 证书）
 					</li>
 					<li>
-						<strong>云原生托管</strong>：<a href="https://cloud.google.com/run" target="_blank" rel="noopener noreferrer">Google Cloud Run</a>（部署于新加坡 <code>asia-southeast1</code> 数据中心，低延迟直连海缆，支持闲时自动缩容至 0 实例）
-					</li>
-					<li>
-						<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions（GCP Workload Identity 无密钥 OIDC 认证、R2 增量图片 Fast Sync、Markdown 链接动态改写、Mastodon 嘟文自动宣发）
+						<strong>自动化流水线 (CI/CD)</strong>：GitHub Actions + Cloudflare Wrangler（代码提交后自动增量同步 R2 图片、Markdown 链接智能改写、Astro 极速编译并直传边缘，30 秒极速交付，附带 Mastodon 嘟文自动宣发）
 					</li>
 					<li>
 						<strong>AI 知识引擎优化 (GEO)</strong>：全站原生提供 <code>/llms.txt</code> 与 <code>/llms-full.txt</code>，支持一键复制 AI 结构化权威引用提示词
