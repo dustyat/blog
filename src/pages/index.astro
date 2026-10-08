@@ -58,31 +58,31 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 												<div class="timeline-date">
 													<FormattedDate date={post.data.pubDate} />
 												</div>
-												<div class="timeline-card-body">
-													<div class="timeline-card-info">
-														<h3 class="timeline-post-title">
-															<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-														</h3>
-														{desc && <p class="timeline-post-desc">{desc}</p>}
-														{tags.length > 0 && (
-															<div class="timeline-tags">
-																{tags.map((tag) => (
-																	<span class="timeline-tag">#{tag}</span>
-																))}
-															</div>
-														)}
+												{heroImgUrl && (
+													<a
+														href={`/blog/${post.id}/`}
+														class="timeline-cover-link"
+														aria-label={post.data.title}
+													>
+														<img
+															src={heroImgUrl}
+															alt={post.data.title}
+															class="timeline-cover-img"
+															loading="lazy"
+														/>
+													</a>
+												)}
+												<h3 class="timeline-post-title">
+													<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+												</h3>
+												{desc && <p class="timeline-post-desc">{desc}</p>}
+												{tags.length > 0 && (
+													<div class="timeline-tags">
+														{tags.map((tag) => (
+															<span class="timeline-tag">#{tag}</span>
+														))}
 													</div>
-													{heroImgUrl && (
-														<a href={`/blog/${post.id}/`} class="timeline-thumb-link" aria-label={post.data.title}>
-															<img
-																src={heroImgUrl}
-																alt={post.data.title}
-																class="timeline-thumb"
-																loading="lazy"
-															/>
-														</a>
-													)}
-												</div>
+												)}
 											</div>
 										</article>
 									);
@@ -149,7 +149,7 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		gap: 1.75rem;
+		gap: 2.25rem;
 		padding-left: 1.5rem;
 		border-left: 2px solid var(--timeline-line);
 		margin-left: 0.5rem;
@@ -190,64 +190,44 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 	.timeline-content {
 		display: flex;
 		flex-direction: column;
-		gap: 0.3rem;
+		gap: 0.45rem;
 	}
 
-	.timeline-card-body {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 1.25rem;
-	}
-
-	.timeline-card-info {
-		flex: 1;
-		min-width: 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-
-	.timeline-thumb-link {
-		flex-shrink: 0;
-		width: 140px;
-		height: 90px;
-		border-radius: var(--radius-sm);
+	.timeline-cover-link {
+		width: 100%;
+		height: 240px;
+		max-height: 260px;
+		border-radius: var(--radius-md, 8px);
 		overflow: hidden;
 		border: 1px solid var(--border-subtle);
 		background-color: var(--card-hover);
 		display: block;
 		box-shadow: var(--shadow-sm);
-		transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+		margin: 0.25rem 0 0.15rem;
+		transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 	}
 
-	.timeline-thumb-link:hover {
+	.timeline-cover-link:hover {
 		border-color: var(--accent);
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-md);
 	}
 
-	.timeline-thumb {
+	.timeline-cover-img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 		display: block;
-		transition: transform 0.3s ease;
+		transition: transform 0.4s ease;
 	}
 
-	.timeline-thumb-link:hover .timeline-thumb {
-		transform: scale(1.05);
+	.timeline-cover-link:hover .timeline-cover-img {
+		transform: scale(1.025);
 	}
 
 	@media (max-width: 640px) {
-		.timeline-card-body {
-			flex-direction: column-reverse;
-			gap: 0.75rem;
-		}
-
-		.timeline-thumb-link {
-			width: 100%;
-			height: 160px;
+		.timeline-cover-link {
+			height: 180px;
 		}
 	}
 
@@ -258,9 +238,9 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 	}
 
 	.timeline-post-title {
-		font-size: 1.15rem;
-		font-weight: 600;
-		margin: 0;
+		font-size: 1.25rem;
+		font-weight: 700;
+		margin: 0.2rem 0 0;
 		line-height: 1.4;
 	}
 
