@@ -17,6 +17,7 @@ const { Content } = await render(post);
 const effectiveDescription = getPostDescription(post);
 const effectiveHeroImage = getPostHeroImage(post);
 const effectiveTags = getPostTags(post);
+const hasExplicitHeroImage = Boolean(post.data.heroImage);
 ---
 
 <BlogPost
@@ -26,6 +27,7 @@ const effectiveTags = getPostTags(post);
 	tags={effectiveTags}
 	slug={post.id}
 	filePath={post.filePath}
+	hasExplicitHeroImage={hasExplicitHeroImage}
 >
 	<Content />
 </BlogPost>

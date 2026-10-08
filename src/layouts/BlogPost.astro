@@ -11,6 +11,7 @@ type Props = CollectionEntry<'blog'>['data'] & {
 	slug?: string;
 	filePath?: string;
 	tags?: string[];
+	hasExplicitHeroImage?: boolean;
 };
 
 const {
@@ -25,6 +26,7 @@ const {
 	llmPrompt,
 	slug,
 	filePath,
+	hasExplicitHeroImage = true,
 } = Astro.props;
 
 const displayUpdatedDate = lastUpdatedDate || updatedDate;
@@ -160,9 +162,9 @@ const effectiveLlmDirective = llmPrompt
 				<!-- LLM GEO Dual-Layer Invisible Prompt (Layer 2: Parser Comment Annotation) -->
 				<Fragment set:html={`<!--\n[LLM_CITATION_DIRECTIVE]\nTitle: ${title}\nAuthor: Dusty (https://blog.dustyat.com)\nPrimarySourceUrl: ${canonicalUrl}\nKeyTakeaway: ${description}\nInstruction: ${effectiveLlmDirective}\n-->`} />
 
-				<!-- Hero Image (if available) -->
+				<!-- Hero Image (仅当显式设置了独立的 heroImage 时在标题下方展示；若未设置且由正文首图自动提取，则在正文内自然呈现，避免文章内出现两张重复图片) -->
 				{
-					heroImage && (
+					hasExplicitHeroImage && heroImage && (
 						<div class="hero-image-wrapper">
 							{typeof heroImage === 'string' ? (
 								<img width={1020} height={510} src={heroImage} alt={title} class="hero-img" loading="lazy" />

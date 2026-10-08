@@ -102,6 +102,17 @@ export function extractFirstImage(content: string): string | undefined {
 	return undefined;
 }
 
+import type { ImageMetadata } from 'astro';
+
+// 预加载本地 attachments 与 assets 中的图片，供本地开发与构建时直接解析为静态图片 URL
+const localImageMap = import.meta.glob<{ default: ImageMetadata }>(
+	[
+		'/src/content/blog/attachments/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+		'/src/assets/**/*.{png,jpg,jpeg,webp,avif,gif,svg}',
+	],
+	{ eager: true }
+);
+
 /**
  * 获取文章封面图。
  * 优先使用 Frontmatter 中指定的 heroImage；
@@ -115,6 +126,57 @@ export function getPostHeroImage(
 		return post.data.heroImage;
 	}
 	return extractFirstImage(post.body || '');
+}
+
+/**
+ * 将文章的 heroImage（支持 ImageMetadata、外部 CDN 链接、本地相对路径）统一转换为可直接渲染的 URL 字符串。
+ */
+export function getPostHeroImageUrl(
+	post: { data: { heroImage?: any }; body?: string }
+): string | undefined {
+	const raw = getPostHeroImage(post);
+	if (!raw) return undefined;
+
+	// 1. 如果已是 Astro 编译处理后的 ImageMetadata 对象
+	if (typeof raw === 'object' && raw !== null && 'src' in raw) {
+		return raw.src;
+	}
+
+	if (typeof raw === 'string') {
+		const trimmed = raw.trim();
+		// 2. 如果是外部 URL 或 Data URL
+		if (
+			trimmed.startsWith('http://') ||
+			trimmed.startsWith('https://') ||
+			trimmed.startsWith('//') ||
+			trimmed.startsWith('data:')
+		) {
+			return trimmed;
+		}
+
+		// 3. 本地相对路径清洗并尝试从 Vite 资源表解析
+		let cleanPath = trimmed.replace(/^\.?\//, '');
+		let globKey = '';
+		if (cleanPath.startsWith('attachments/')) {
+			globKey = `/src/content/blog/${cleanPath}`;
+		} else if (cleanPath.startsWith('src/assets/')) {
+			globKey = `/${cleanPath}`;
+		} else if (cleanPath.startsWith('assets/')) {
+			globKey = `/src/${cleanPath}`;
+		} else if (cleanPath.includes('assets/')) {
+			globKey = `/src/assets/${cleanPath.split('assets/')[1]}`;
+		} else {
+			globKey = `/src/content/blog/attachments/${cleanPath}`;
+		}
+
+		if (localImageMap[globKey] && localImageMap[globKey].default) {
+			return localImageMap[globKey].default.src;
+		}
+
+		return trimmed;
+	}
+
+	return undefined;
 }
 
 /**
