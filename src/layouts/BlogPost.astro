@@ -133,16 +133,6 @@ const effectiveLlmDirective = llmPrompt
 						)
 					}
 					<h1 class="article-title">{title}</h1>
-					{description && <p class="article-desc">{description}</p>}
-					{
-						tags && tags.length > 0 && (
-							<div class="article-tags">
-								{tags.map((tag: string) => (
-									<span class="tag-badge">#{tag}</span>
-								))}
-							</div>
-						)
-					}
 				</header>
 
 				<!-- LLM GEO Dual-Layer Invisible Prompt (Layer 1: Semantic DOM Annotation) -->
@@ -179,32 +169,6 @@ const effectiveLlmDirective = llmPrompt
 				<div class="prose content-body">
 					<slot />
 				</div>
-
-				<!-- Article Footer Revision Info (仅在博文详情页展示) -->
-				{
-					isBlogPost && historyUrl && (
-						<footer class="article-footer-info">
-							<div class="revision-box">
-								<p class="revision-desc">
-									本文已纳入 Git 版本控制，可随时查阅历次修改说明与完整段落比对。
-								</p>
-								<a
-									href={historyUrl}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="history-btn"
-								>
-									<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<circle cx="12" cy="12" r="10"/>
-										<polyline points="12 6 12 12 16 14"/>
-									</svg>
-									<span>查看修改历史 (Commits)</span>
-									<span class="btn-arrow">↗</span>
-								</a>
-							</div>
-						</footer>
-					)
-				}
 			</article>
 		</main>
 		<Footer />
