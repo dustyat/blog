@@ -8,7 +8,7 @@ const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory, excluding templates.
 	loader: glob({
 		base: './src/content/blog',
-		pattern: ['**/*.{md,mdx}', '!**/_templates/**', '!**/templates/**'],
+		pattern: ['**/*.{md,mdx}', '!**/templates/**', '!**/attachments/**'],
 	}),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>

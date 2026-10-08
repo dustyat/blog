@@ -2,7 +2,7 @@
 """
 scripts/sync_and_replace_assets.py
 
-扫描指定文章目录中的 Markdown/MDX 文件，识别本地图片相对路径与 Obsidian Wiki-link 图片语法，
+扫描指定文章目录中的 Markdown/MDX 文件，识别本地图片相对路径，
 并将其统一替换为 Cloudflare R2 / CDN 绝对访问链接。
 
 支持的环境变量与参数：
@@ -109,44 +109,7 @@ def replace_images_in_content(
 
         text = parts[i]
 
-        # 1. 替换 Obsidian Wiki-link 嵌入图片语法: ![[filename.ext]] 或 ![[filename.ext|alt]]
-        def wiki_replacer(match: re.Match) -> str:
-            full_match = match.group(0)
-            inner = match.group(1).strip()
-
-            # 解析别名/尺寸: ![[pic.png|alt]] 或 ![[pic.png|800]]
-            if "|" in inner:
-                img_ref, alias = inner.split("|", 1)
-                img_ref = img_ref.strip()
-                alias = alias.strip()
-            else:
-                img_ref = inner
-                alias = ""
-
-            if not is_image_file(img_ref):
-                # 不是图片（如非图片嵌入），保持原样
-                return full_match
-
-            # 若未指定 alt 或 alt 仅为纯数字（尺寸定义），使用图片主名作为 alt
-            if not alias or alias.isdigit():
-                stem = Path(img_ref).stem
-                alt_text = stem
-            else:
-                alt_text = alias
-
-            norm_path = normalize_image_path(img_ref)
-            target_url = build_cdn_url(cdn_base_url, norm_path)
-            new_syntax = f"![{alt_text}]({target_url})"
-
-            replacements.append((full_match, new_syntax))
-            if verbose:
-                print(f"  [Wiki-link] {full_match} -> {new_syntax}")
-            return new_syntax
-
-        # 匹配 ![[...]] 且内部不包含换行符
-        text = re.sub(r"!\[\[([^\]\n]+)\]\]", wiki_replacer, text)
-
-        # 2. 替换标准 Markdown 相对路径图片: ![alt](path)
+        # 替换标准 Markdown 相对路径图片: ![alt](path)
         def md_replacer(match: re.Match) -> str:
             full_match = match.group(0)
             alt_text = match.group(1)

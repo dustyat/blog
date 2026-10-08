@@ -60,7 +60,14 @@ jobs:
               --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com" \
               --no-progress
           fi
-          # 2. 增量同步 src/assets 下的图片附件（排除字体文件）
+          # 2. 增量同步 src/content/blog/attachments 目录（如果存在）
+          if [ -d "./src/content/blog/attachments" ]; then
+            echo "📦 正在增量同步 ./src/content/blog/attachments 到 Cloudflare R2..."
+            aws s3 sync ./src/content/blog/attachments "s3://${R2_BUCKET_NAME}/attachments" \
+              --endpoint-url "https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com" \
+              --no-progress
+          fi
+          # 3. 增量同步 src/assets 下的图片附件（排除字体文件）
           if [ -d "./src/assets" ]; then
             echo "📦 正在增量同步 ./src/assets 图片附件到 Cloudflare R2..."
             aws s3 sync ./src/assets "s3://${R2_BUCKET_NAME}/attachments" \

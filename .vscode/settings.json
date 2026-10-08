@@ -1,0 +1,20 @@
+{
+  // 开启 VS Code 原生粘贴图片自动落盘功能
+  "markdown.editor.filePaste.enabled": "smart",
+  "markdown.editor.filePaste.copyIntoWorkspace": "mediaFiles",
+  "markdown.editor.drop.copyIntoWorkspace": "mediaFiles",
+
+  // 截图粘贴时，自动统一保存至 src/content/blog/attachments 目录
+  "markdown.copyFiles.destination": {
+    "/src/content/blog/**": "${documentWorkspaceFolder}/src/content/blog/attachments/${fileName}",
+    "**/*": "${documentWorkspaceFolder}/attachments/${fileName}"
+  },
+
+  // 粘贴网址时智能转为 Markdown 超链接
+  "markdown.editor.pasteUrlAsFormattedLink.enabled": "smart",
+
+  // Python 静态类型分析与模块导入路径解析
+  "python.analysis.extraPaths": [
+    "./scripts"
+  ]
+}

@@ -10,7 +10,7 @@
    - 1.2 绑定自定义域名 (Custom Domain)
    - 1.3 生成 S3 兼容 API 令牌 (API Token)
 2. [GitHub Secrets 环境变量配置](#二github-secrets-环境变量配置)
-3. [Obsidian 本地配置与写作体验](#三obsidian-本地配置与写作体验)
+3. [VS Code 本地配置与写作体验](#三vs-code-本地配置与写作体验)
 4. [本地测试与验证方法](#四本地测试与验证方法)
 
 ---
@@ -71,15 +71,14 @@ Cloudflare R2 完全兼容 AWS S3 API，GitHub Actions 将使用 `aws-cli` 与 S
 
 ---
 
-## 三、Obsidian 本地配置与写作体验
+## 三、VS Code 本地配置与写作体验
 
-你的本地写作流程无需任何改变：
-1. 在 Obsidian 中截图后直接 `Ctrl + V` 粘贴。
-2. 无论 Obsidian 生成的是：
-   - 标准相对路径：`![alt](./attachments/photo.png)` 或 `![alt](../../assets/photo.png)`
-   - 还是 Wiki-link 嵌入：`![[photo.png]]`、`![[photo.png|800]]`
-3. 本地预览、离线写作体验完全不受影响，本地硬盘始终保留完整原图。
-4. 执行 `git push` 推送 Markdown 源码与本地图片至 GitHub 即可，后续全交由 CI 自动化处理！
+你的本地写作流程平滑高效：
+1. 打开 `src/content/blog` 工作区目录。
+2. 截图后直接在编辑器中 `Ctrl + V` 粘贴。
+3. VS Code 原生将截图保存至 `attachments/` 目录，并插入标准相对路径：`![alt](./attachments/photo.png)`。
+4. 本地预览、离线写作体验完全不受影响，本地硬盘始终保留完整原图。
+5. 执行 `git push` 推送 Markdown 源码与本地图片至 GitHub 即可，后续全交由 CI 自动化处理！
 
 ---
 
@@ -98,7 +97,7 @@ python scripts/sync_and_replace_assets.py --cdn-base-url "https://img.yourdomain
 ```bash
 python -m unittest tests/test_sync_and_replace.py
 ```
-可验证包括标准 Markdown 相对路径、Obsidian Wiki-link（含别名/尺寸）、外部链接保护、代码块保护等全套测试用例。
+可验证包括标准 Markdown 相对路径、外部链接保护、代码块保护等全套测试用例。
 
 ---
 

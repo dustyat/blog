@@ -1,0 +1,20 @@
+{
+  "Astro Blog Frontmatter": {
+    "scope": "markdown,mdx",
+    "prefix": "post",
+    "description": "Insert Astro blog post frontmatter template",
+    "body": [
+      "---",
+      "title: \"${1:文章标题}\"",
+      "description: \"${2:简短描述}\"",
+      "pubDate: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE",
+      "lastUpdatedDate: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE",
+      "# heroImage: \"./attachments/example.png\"",
+      "# mastodonTootId: \"\"",
+      "# llmPrompt: \"\"",
+      "---",
+      "",
+      "$0"
+    ]
+  }
+}

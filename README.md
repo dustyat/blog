@@ -1,15 +1,15 @@
 # Dusty's Modern Tech Blog 🚀
 
-> 现代极简、高性能的云原生个人技术博客。基于 **Astro v5 + Google Cloud Run + Cloudflare R2 + GitHub Actions** 构建，融合 **Obsidian 本地离线写作** 与全自动化 CI/CD 发布流水线。
+> 现代极简、高性能的云原生个人技术博客。基于 **Astro v5 + Google Cloud Run + Cloudflare R2 + GitHub Actions** 构建，融合 **VS Code 本地离线写作** 与全自动化 CI/CD 发布流水线。
 
 ---
 
 ## 🌟 核心特性与架构亮点
 
 - **⚡ 极致加载性能**：采用 [Astro v5](https://astro.build/) 静态生成（SSG），零默认客户端 JS 运行时，Lighthouse 性能指标满分。
-- **📝 Obsidian 离线写作体验**：
-  - 本地截图直接 `Ctrl + V` 粘贴，原图保存在本地，离线写作与本地阅读体验完好。
-  - 标准相对路径及 Obsidian Wiki-link（`![[...]`）自动解析与兼容。
+- **📝 VS Code 离线写作体验**：
+  - 本地截图直接 `Ctrl + V` 粘贴，原图自动保存至工作区 `attachments/`，离线写作与本地阅读体验完好。
+  - 标准相对路径图片引用，CI 自动化增量同步与全景 CDN 加速。
 - **☁️ Cloudflare R2 自动化图床**：
   - 利用 R2 的 **0 出口流量费** 与自定义 CDN 域名（`blogimg.uptodate.top`）进行全球边缘分发。
   - GitHub Actions 流水线通过 S3 协议进行**增量图片同步（Fast Sync）**。
@@ -38,7 +38,7 @@
 
 ```mermaid
 flowchart TD
-    A[Obsidian 本地写作 + 截图] -->|git push origin main| B[GitHub Actions 触发]
+    A[VS Code 本地写作 + 截图] -->|git push origin main| B[GitHub Actions 触发]
     B --> C[GCP Workload Identity 认证]
     B --> D[aws s3 sync 增量同步本地图片至 Cloudflare R2]
     D --> E[Python 脚本动态替换 Markdown 链接为 CDN URL]
@@ -67,7 +67,8 @@ flowchart TD
 │   ├── components/             # Astro 界面组件（Header, Footer, MastodonWidget 等）
 │   ├── content/
 │   │   └── blog/               # 博文 Markdown 与 MDX 文件
-│   │       └── _templates/     # Obsidian 文章模板 (Post Template.md)
+│   │       ├── attachments/    # 本地图片附件（自动落盘）
+│   │       └── .vscode/        # 工作区配置与文章 Frontmatter 代码片段
 │   ├── layouts/                # 页面布局模板（BlogPost.astro 等）
 │   ├── pages/                  # 网站路由页面（首页, 博客列表, 关于页面, RSS 等）
 │   ├── styles/                 # 全局 CSS 变量与设计体系
@@ -110,8 +111,8 @@ python -m unittest tests/test_sync_and_replace.py
 
 ## ✍️ 日常写作发布流程
 
-1. **新建文章**：在 Obsidian 中使用模板 `Post Template.md` 创建新笔记，`title` 与 `description` 会自动生成。
-2. **插入配图**：直接剪贴板粘贴截图即可，无需关心图床上传。
+1. **新建文章**：在 `src/content/blog/` 下新建 `.md` 文件，输入 `post` 并按 `Tab` 键即可自动生成标准 Frontmatter 元数据模板。
+2. **插入配图**：截图后直接在编辑器中 `Ctrl + V` 粘贴，图片自动保存至 `attachments/` 并插入标准 Markdown 相对路径，无需关心图床上传。
 3. **推送到 GitHub**：
    ```bash
    git add .

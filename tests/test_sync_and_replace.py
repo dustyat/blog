@@ -2,9 +2,17 @@ import unittest
 import sys
 from pathlib import Path
 
-# Add scripts to sys.path
-sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-from sync_and_replace_assets import replace_images_in_content
+# Add project root and scripts to sys.path
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+if str(PROJECT_ROOT / "scripts") not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+
+try:
+    from scripts.sync_and_replace_assets import replace_images_in_content
+except ImportError:
+    from sync_and_replace_assets import replace_images_in_content
 
 
 class TestImageReplacement(unittest.TestCase):
@@ -20,37 +28,21 @@ class TestImageReplacement(unittest.TestCase):
         self.assertEqual(len(reps), 1)
         self.assertIn("![My Image](https://img.yourdomain.com/attachments/photo.png)", new_content)
 
-    def test_obsidian_wikilink_simple(self):
-        content = "Obsidian paste: ![[screenshot.png]]"
+    def test_standard_markdown_attachments_prefix(self):
+        content = "Another image: ![Screenshot](attachments/screenshot.png)"
         new_content, reps = replace_images_in_content(
             content, self.cdn_base_url, self.fake_path
         )
         self.assertEqual(len(reps), 1)
-        self.assertIn("![screenshot](https://img.yourdomain.com/attachments/screenshot.png)", new_content)
+        self.assertIn("![Screenshot](https://img.yourdomain.com/attachments/screenshot.png)", new_content)
 
-    def test_obsidian_wikilink_alias(self):
-        content = "Obsidian alias: ![[diagram.png|Architecture Diagram]]"
+    def test_standard_markdown_parent_relative(self):
+        content = "Parent image: ![Diagram](../attachments/diagram.png)"
         new_content, reps = replace_images_in_content(
             content, self.cdn_base_url, self.fake_path
         )
         self.assertEqual(len(reps), 1)
-        self.assertIn("![Architecture Diagram](https://img.yourdomain.com/attachments/diagram.png)", new_content)
-
-    def test_obsidian_wikilink_dimension(self):
-        content = "Obsidian resized: ![[photo.jpg|800]]"
-        new_content, reps = replace_images_in_content(
-            content, self.cdn_base_url, self.fake_path
-        )
-        self.assertEqual(len(reps), 1)
-        self.assertIn("![photo](https://img.yourdomain.com/attachments/photo.jpg)", new_content)
-
-    def test_obsidian_non_image_wikilink(self):
-        content = "Refer to [[Other Article]] for more details."
-        new_content, reps = replace_images_in_content(
-            content, self.cdn_base_url, self.fake_path
-        )
-        self.assertEqual(len(reps), 0)
-        self.assertEqual(new_content, content)
+        self.assertIn("![Diagram](https://img.yourdomain.com/attachments/diagram.png)", new_content)
 
     def test_external_url_untouched(self):
         content = "External: ![External](https://cdn.example.com/images/pic.png)"
@@ -65,21 +57,19 @@ class TestImageReplacement(unittest.TestCase):
 
 ```markdown
 ![alt](./attachments/code_example.png)
-![[inside_code.png]]
 ```
 
-After code: ![[outside.png]]
+After code: ![outside](./attachments/outside.png)
 """
         new_content, reps = replace_images_in_content(
             content, self.cdn_base_url, self.fake_path
         )
         self.assertEqual(len(reps), 1)
         self.assertIn("![alt](./attachments/code_example.png)", new_content)
-        self.assertIn("![[inside_code.png]]", new_content)
         self.assertIn("![outside](https://img.yourdomain.com/attachments/outside.png)", new_content)
 
     def test_inline_code_protected(self):
-        content = "Do not replace `![alt](./attachments/code.png)` in inline code. But replace ![[real.png]]."
+        content = "Do not replace `![alt](./attachments/code.png)` in inline code. But replace ![real](./attachments/real.png)."
         new_content, reps = replace_images_in_content(
             content, self.cdn_base_url, self.fake_path
         )
