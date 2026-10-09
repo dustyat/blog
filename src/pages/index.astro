@@ -229,10 +229,10 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		gap: 2.25rem;
-		padding-left: 1.5rem;
-		border-left: 1px solid var(--timeline-line);
-		margin-left: 0.5rem;
+		gap: 2.75rem;
+		padding-left: 0;
+		margin-left: 0;
+		border-left: none;
 	}
 
 	.timeline-item {
@@ -242,31 +242,32 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 	}
 
 	.timeline-node {
-		position: absolute;
-		left: -1.5rem;
-		top: 0.35rem;
-		transform: translateX(-50%);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: var(--bg-color);
-		padding: 2px 0;
+		display: none;
 	}
 
-	.timeline-dot {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background-color: var(--timeline-line);
-		border: 1px solid var(--text-subtle);
-		transition: all 0.2s ease;
+	.timeline-year-badge {
+		padding-left: 0;
+		margin-bottom: 1.25rem;
+		font-size: 1.2rem;
 	}
 
-	.timeline-item:hover .timeline-dot {
-		background-color: var(--accent);
-		border-color: var(--accent);
-		transform: scale(1.35);
-		box-shadow: 0 0 6px var(--accent);
+	@media (max-width: 640px) {
+		.timeline-items {
+			padding-left: 0;
+			margin-left: 0;
+			border-left: none;
+			gap: 2rem;
+		}
+
+		.timeline-node {
+			display: none;
+		}
+
+		.timeline-year-badge {
+			padding-left: 0;
+			margin-bottom: 0.85rem;
+			font-size: 1.05rem;
+		}
 	}
 
 	/* Dynamic Tag Filter Bar */

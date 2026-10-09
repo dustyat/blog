@@ -2,13 +2,6 @@
 ---
 <div class="theme-palette" role="group" aria-label="主题配色选择">
 	<button
-		id="theme-dot-white"
-		class="theme-dot dot-white"
-		type="button"
-		aria-label="默认纯白背景 (#FFFFFF)"
-		title="静电白 (#FFFFFF)"
-	></button>
-	<button
 		id="theme-dot-cream"
 		class="theme-dot dot-cream"
 		type="button"
@@ -23,11 +16,11 @@
 		title="护眼米黄 (#F5F5D5)"
 	></button>
 	<button
-		id="theme-dot-dark"
-		class="theme-dot dot-dark"
+		id="theme-dot-mode"
+		class="theme-dot dot-mode dot-dark"
 		type="button"
-		aria-label="暗黑模式 (#0D1117)"
-		title="暗黑模式 (#0D1117)"
+		aria-label="切换至暗黑模式 (#0D1117)"
+		title="切换至暗黑模式 (#0D1117)"
 	></button>
 </div>
 
@@ -35,7 +28,7 @@
 	.theme-palette {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.65rem;
+		gap: 0.6rem;
 	}
 
 	.theme-dot {
@@ -47,51 +40,87 @@
 		outline: none;
 		position: relative;
 		border: none;
-		transition: opacity 0.2s ease;
+		transition: opacity 0.2s ease, background-color 0.25s ease, box-shadow 0.25s ease;
 	}
 
 	.theme-dot:hover {
-		opacity: 0.75;
+		opacity: 0.8;
 	}
 
-	/* 1. 默认静电白 (#FFFFFF) */
-	.dot-white {
-		background-color: #ffffff;
-		box-shadow: inset 0 0 0 1px #d0d0d0;
-	}
-
-	/* 2. 暖白 (#FCFAF8) */
+	/* 1. 暖白 (#FCFAF8) */
 	.dot-cream {
 		background-color: #fcfaf8;
 		box-shadow: inset 0 0 0 1px #d5cfc7;
 	}
 
-	/* 3. 护眼米黄 (#F5F5D5) */
+	/* 2. 护眼米黄 (#F5F5D5) */
 	.dot-warm {
 		background-color: #f5f5d5;
 		box-shadow: inset 0 0 0 1px #d0d0a0;
 	}
 
-	/* 4. 暗黑夜间 (#0D1117) */
-	.dot-dark {
+	/* 3. 黑白双态互切按钮 */
+	.dot-mode.dot-dark {
 		background-color: #0d1117;
 		box-shadow: inset 0 0 0 1px #484f58;
+	}
+
+	.dot-mode.dot-white {
+		background-color: #ffffff;
+		box-shadow: inset 0 0 0 1px #d0d0d0;
+	}
+
+	@media (max-width: 640px) {
+		.theme-palette {
+			gap: 0.5rem;
+		}
+		.theme-dot {
+			width: 14px;
+			height: 14px;
+		}
 	}
 </style>
 
 <script>
-	const dotWhiteBtn = document.getElementById('theme-dot-white');
 	const dotCreamBtn = document.getElementById('theme-dot-cream');
 	const dotWarmBtn = document.getElementById('theme-dot-warm');
-	const dotDarkBtn = document.getElementById('theme-dot-dark');
+	const dotModeBtn = document.getElementById('theme-dot-mode');
+
+	const updateModeButtonVisual = () => {
+		const currentTheme = document.documentElement.getAttribute('data-theme') || 'white';
+		if (!dotModeBtn) return;
+		if (currentTheme === 'dark') {
+			// 当前是暗黑模式：按钮显示为白色圆点，点击可变回白色
+			dotModeBtn.classList.remove('dot-dark');
+			dotModeBtn.classList.add('dot-white');
+			dotModeBtn.setAttribute('title', '切换至默认白 (#FFFFFF)');
+			dotModeBtn.setAttribute('aria-label', '切换至默认白 (#FFFFFF)');
+		} else {
+			// 当前是浅色模式（white/cream/warm）：按钮显示为黑色圆点，点击可变暗黑
+			dotModeBtn.classList.remove('dot-white');
+			dotModeBtn.classList.add('dot-dark');
+			dotModeBtn.setAttribute('title', '切换至暗黑模式 (#0D1117)');
+			dotModeBtn.setAttribute('aria-label', '切换至暗黑模式 (#0D1117)');
+		}
+	};
 
 	const setTheme = (theme: string) => {
 		document.documentElement.setAttribute('data-theme', theme);
 		localStorage.setItem('theme', theme);
+		updateModeButtonVisual();
 	};
 
-	dotWhiteBtn?.addEventListener('click', () => setTheme('white'));
+	// 初始化黑白按钮视觉状态
+	updateModeButtonVisual();
+
 	dotCreamBtn?.addEventListener('click', () => setTheme('cream'));
 	dotWarmBtn?.addEventListener('click', () => setTheme('warm'));
-	dotDarkBtn?.addEventListener('click', () => setTheme('dark'));
+	dotModeBtn?.addEventListener('click', () => {
+		const currentTheme = document.documentElement.getAttribute('data-theme') || 'white';
+		if (currentTheme === 'dark') {
+			setTheme('white');
+		} else {
+			setTheme('dark');
+		}
+	});
 </script>
