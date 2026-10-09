@@ -18,15 +18,33 @@ import { SITE_TITLE } from '../consts';
 				<HeaderLink href="/about/">关于</HeaderLink>
 			</div>
 
-			<button id="search-btn" class="nav-search-btn" type="button" aria-label="搜索 (Ctrl+K)" title="搜索文章 (Ctrl+K / ⌘K)">
-				<svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<circle cx="11" cy="11" r="8"></circle>
-					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-				</svg>
-				<span class="search-kbd-pill">⌘K</span>
-			</button>
-
 			<div class="nav-actions">
+				<button
+					id="view-toggle-btn"
+					class="nav-view-btn"
+					type="button"
+					aria-label="切换为紧凑列表"
+					title="切换为紧凑列表"
+				>
+					<svg class="view-icon icon-to-compact" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="3" y1="6" x2="21" y2="6"></line>
+						<line x1="3" y1="12" x2="21" y2="12"></line>
+						<line x1="3" y1="18" x2="21" y2="18"></line>
+					</svg>
+					<svg class="view-icon icon-to-feed" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="3" y="3" width="18" height="7" rx="1.5"></rect>
+						<rect x="3" y="14" width="18" height="7" rx="1.5"></rect>
+					</svg>
+				</button>
+
+				<button id="search-btn" class="nav-search-btn" type="button" aria-label="搜索 (Ctrl+K)" title="搜索文章 (Ctrl+K / ⌘K)">
+					<svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="11" cy="11" r="8"></circle>
+						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+					</svg>
+					<span class="search-kbd-pill">⌘K</span>
+				</button>
+
 				<ThemeToggle />
 			</div>
 		</div>
@@ -114,6 +132,54 @@ import { SITE_TITLE } from '../consts';
 	.nav-actions {
 		display: inline-flex;
 		align-items: center;
+		gap: 0.65rem;
+	}
+
+	.nav-view-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		padding: 0;
+		background: transparent;
+		border: 1px solid transparent;
+		border-radius: var(--radius-sm);
+		color: var(--text-muted);
+		cursor: pointer;
+		transition: all 0.2s ease;
+		line-height: 1;
+	}
+
+	.nav-view-btn:hover {
+		color: var(--text-color);
+		background: var(--card-hover);
+		border-color: var(--border-subtle);
+	}
+
+	.view-icon {
+		display: block;
+		transition: transform 0.2s ease;
+	}
+
+	.nav-view-btn:hover .view-icon {
+		transform: scale(1.08);
+	}
+
+	/* 默认图文模式：显示 icon-to-compact（提示可切换为紧凑），隐藏 icon-to-feed */
+	.icon-to-compact {
+		display: block;
+	}
+	.icon-to-feed {
+		display: none;
+	}
+
+	/* 紧凑模式：显示 icon-to-feed（提示可切换回图文），隐藏 icon-to-compact */
+	:global(html[data-view="compact"]) .icon-to-compact {
+		display: none;
+	}
+	:global(html[data-view="compact"]) .icon-to-feed {
+		display: block;
 	}
 
 	@media (max-width: 640px) {
@@ -122,7 +188,7 @@ import { SITE_TITLE } from '../consts';
 		}
 		.nav-container {
 			padding: 0.65rem 0;
-			gap: 1.25rem;
+			gap: 1rem;
 		}
 		.brand-icon {
 			width: 19px;
@@ -132,28 +198,66 @@ import { SITE_TITLE } from '../consts';
 			font-size: 0.95rem;
 		}
 		.nav-right {
-			gap: 0.85rem;
+			gap: 0.75rem;
 		}
 		.nav-links {
-			gap: 0.75rem;
+			gap: 0.7rem;
+		}
+		.nav-actions {
+			gap: 0.45rem;
 		}
 	}
 
 	@media (max-width: 420px) {
 		.header {
-			padding: 0 0.75rem;
+			padding: 0 0.65rem;
 		}
 		.nav-container {
-			gap: 1rem;
+			gap: 0.75rem;
 		}
 		.brand-title {
 			font-size: 0.9rem;
 		}
 		.nav-right {
-			gap: 0.65rem;
+			gap: 0.55rem;
 		}
 		.nav-links {
-			gap: 0.6rem;
+			gap: 0.5rem;
+		}
+		.nav-actions {
+			gap: 0.35rem;
 		}
 	}
 </style>
+
+<script>
+	const viewBtn = document.getElementById('view-toggle-btn');
+
+	const updateViewButtonTooltip = () => {
+		if (!viewBtn) return;
+		const isCompact = document.documentElement.getAttribute('data-view') === 'compact';
+		const label = isCompact ? '切换为图文模式' : '切换为紧凑列表';
+		viewBtn.setAttribute('title', label);
+		viewBtn.setAttribute('aria-label', label);
+	};
+
+	const setViewMode = (mode: string) => {
+		if (mode === 'compact') {
+			document.documentElement.setAttribute('data-view', 'compact');
+			localStorage.setItem('blog-view-mode', 'compact');
+		} else {
+			document.documentElement.removeAttribute('data-view');
+			localStorage.setItem('blog-view-mode', 'feed');
+		}
+		updateViewButtonTooltip();
+		window.dispatchEvent(new CustomEvent('viewmodechange', { detail: { mode } }));
+	};
+
+	// 初始 tooltip 同步
+	updateViewButtonTooltip();
+
+	viewBtn?.addEventListener('click', () => {
+		const isCompact = document.documentElement.getAttribute('data-view') === 'compact';
+		setViewMode(isCompact ? 'feed' : 'compact');
+	});
+</script>

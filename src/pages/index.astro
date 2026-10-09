@@ -51,68 +51,113 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 				</div>
 
 				<div class="timeline">
-					{years.map((year) => (
-						<div class="timeline-year-group">
-							<div class="timeline-year-badge">{year}</div>
-							<div class="timeline-items">
-								{postsByYear[year].map((post) => {
-									const heroImgUrl = getPostHeroImageUrl(post);
-									const desc = getPostDescription(post);
-									const tags = getPostTags(post);
-									return (
-										<article class="timeline-item" data-tags={tags.map(t => t.toLowerCase()).join(',')}>
-											<div class="timeline-node">
-												<span class="timeline-dot"></span>
-											</div>
-											<div class="timeline-content">
-												<div class="timeline-date">
-													<FormattedDate date={post.data.pubDate} />
-												</div>
-												{heroImgUrl && (
-													<a
-														href={`/blog/${post.id}/`}
-														class="timeline-cover-link"
-														aria-label={post.data.title}
-													>
-														<img
-															src={heroImgUrl}
-															alt={post.data.title}
-															class="timeline-cover-img"
-															loading="lazy"
-														/>
-													</a>
-												)}
-												<h3 class="timeline-post-title">
-													<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-												</h3>
-												{desc && <p class="timeline-post-desc">{desc}</p>}
-												{tags.length > 0 && (
-													<div class="timeline-tags">
-														{tags.map((tag) => (
-															<button
-																type="button"
-																class="timeline-tag"
-																data-tag={tag}
-																title={`按标签 #${tag} 筛选`}
-															>
-																#{tag}
-															</button>
-														))}
+					{years.map((year, index) => {
+						const yearPosts = postsByYear[year];
+						const isLatestYear = index === 0;
+						return (
+							<div
+								class={`timeline-year-group ${isLatestYear ? 'is-expanded' : 'is-collapsed'}`}
+								data-year={year}
+								data-default-expanded={isLatestYear ? 'true' : 'false'}
+							>
+								<button
+									type="button"
+									class="timeline-year-header"
+									aria-expanded={isLatestYear ? 'true' : 'false'}
+									title={isLatestYear ? '点击收起该年份' : '点击展开该年份'}
+								>
+									<div class="year-header-left">
+										<span class="timeline-year-badge">{year}</span>
+										<span class="timeline-year-count">{yearPosts.length} 篇</span>
+									</div>
+									<div class="year-header-right">
+										<svg class="year-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+											<polyline points="6 9 12 15 18 9"></polyline>
+										</svg>
+									</div>
+								</button>
+								<div class="timeline-items">
+									{yearPosts.map((post) => {
+										const heroImgUrl = getPostHeroImageUrl(post);
+										const desc = getPostDescription(post);
+										const tags = getPostTags(post);
+										return (
+											<article class="timeline-item" data-tags={tags.map(t => t.toLowerCase()).join(',')}>
+												<div class="timeline-content">
+													<div class="timeline-date">
+														<FormattedDate date={post.data.pubDate} />
 													</div>
-												)}
-											</div>
-										</article>
-									);
-								})}
+													{heroImgUrl && (
+														<a
+															href={`/blog/${post.id}/`}
+															class="timeline-cover-link"
+															aria-label={post.data.title}
+														>
+															<img
+																src={heroImgUrl}
+																alt={post.data.title}
+																class="timeline-cover-img"
+																loading="lazy"
+															/>
+														</a>
+													)}
+													<h3 class="timeline-post-title">
+														<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+													</h3>
+													{desc && <p class="timeline-post-desc">{desc}</p>}
+													{tags.length > 0 && (
+														<div class="timeline-tags">
+															{tags.map((tag) => (
+																<button
+																	type="button"
+																	class="timeline-tag"
+																	data-tag={tag}
+																	title={`按标签 #${tag} 筛选`}
+																>
+																	#{tag}
+																</button>
+															))}
+														</div>
+													)}
+												</div>
+											</article>
+										);
+									})}
+								</div>
 							</div>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			</section>
 		</main>
 		<Footer />
 
 		<script>
+			// 年份折叠/展开交互
+			const setupYearToggles = () => {
+				const yearHeaders = document.querySelectorAll<HTMLButtonElement>('.timeline-year-header');
+				yearHeaders.forEach((btn) => {
+					btn.addEventListener('click', () => {
+						const group = btn.closest<HTMLElement>('.timeline-year-group');
+						if (!group) return;
+						const isExpanded = group.classList.contains('is-expanded');
+						if (isExpanded) {
+							group.classList.remove('is-expanded');
+							group.classList.add('is-collapsed');
+							btn.setAttribute('aria-expanded', 'false');
+							btn.setAttribute('title', '点击展开该年份');
+						} else {
+							group.classList.remove('is-collapsed');
+							group.classList.add('is-expanded');
+							btn.setAttribute('aria-expanded', 'true');
+							btn.setAttribute('title', '点击收起该年份');
+						}
+					});
+				});
+			};
+
+			setupYearToggles();
+
 			const filterByTag = (tagName: string | null) => {
 				const cleanTag = (tagName || '').trim().toLowerCase();
 				const filterBar = document.getElementById('tag-filter-bar');
@@ -126,7 +171,22 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 					if (filterBar) filterBar.style.display = 'none';
 					if (noResults) noResults.style.display = 'none';
 					articles.forEach((art) => (art.style.display = ''));
-					yearGroups.forEach((yg) => (yg.style.display = ''));
+					
+					// 恢复默认年份折叠状态 (首年展开，往年折叠)
+					yearGroups.forEach((yg) => {
+						yg.style.display = '';
+						const defaultExpanded = yg.getAttribute('data-default-expanded') === 'true';
+						const btn = yg.querySelector<HTMLButtonElement>('.timeline-year-header');
+						if (defaultExpanded) {
+							yg.classList.add('is-expanded');
+							yg.classList.remove('is-collapsed');
+							btn?.setAttribute('aria-expanded', 'true');
+						} else {
+							yg.classList.remove('is-expanded');
+							yg.classList.add('is-collapsed');
+							btn?.setAttribute('aria-expanded', 'false');
+						}
+					});
 					tagButtons.forEach((btn) => btn.classList.remove('active'));
 
 					const url = new URL(window.location.href);
@@ -153,9 +213,18 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 					}
 				});
 
+				// 筛选激活时，有匹配项的年份自动展开并显示
 				yearGroups.forEach((yg) => {
 					const visible = yg.querySelectorAll<HTMLElement>('.timeline-item:not([style*="display: none"])');
-					yg.style.display = visible.length > 0 ? '' : 'none';
+					if (visible.length > 0) {
+						yg.style.display = '';
+						yg.classList.add('is-expanded');
+						yg.classList.remove('is-collapsed');
+						const btn = yg.querySelector<HTMLButtonElement>('.timeline-year-header');
+						btn?.setAttribute('aria-expanded', 'true');
+					} else {
+						yg.style.display = 'none';
+					}
 				});
 
 				if (noResults) {
@@ -216,13 +285,82 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		position: relative;
 	}
 
+	.timeline-year-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		background: transparent;
+		border: none;
+		padding: 0.4rem 0.25rem;
+		margin-bottom: 1.25rem;
+		cursor: pointer;
+		color: inherit;
+		border-radius: var(--radius-sm);
+		transition: background-color 0.15s ease, opacity 0.15s ease;
+		text-align: left;
+	}
+
+	.timeline-year-header:hover {
+		background: var(--card-hover);
+	}
+
+	.year-header-left {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
 	.timeline-year-badge {
-		font-size: 1.1rem;
+		font-size: 1.2rem;
 		font-weight: 700;
 		font-family: var(--font-mono);
+		color: var(--text-color);
+		letter-spacing: -0.01em;
+	}
+
+	.timeline-year-count {
+		font-size: 0.75rem;
+		font-family: var(--font-mono);
 		color: var(--text-muted);
-		margin-bottom: 1.25rem;
-		padding-left: 0.25rem;
+		background: var(--card-hover);
+		border: 1px solid var(--border-subtle);
+		padding: 0.12rem 0.5rem;
+		border-radius: 999px;
+		line-height: 1.2;
+	}
+
+	.year-header-right {
+		display: inline-flex;
+		align-items: center;
+		color: var(--text-muted);
+	}
+
+	.year-chevron {
+		transition: transform 0.25s ease, color 0.15s ease;
+	}
+
+	.timeline-year-header:hover .year-chevron {
+		color: var(--text-color);
+	}
+
+	/* 展开时：箭头向下 */
+	.timeline-year-group.is-expanded .year-chevron {
+		transform: rotate(0deg);
+	}
+
+	/* 折叠时：箭头指向左/右 (向右表示可展开) */
+	.timeline-year-group.is-collapsed .year-chevron {
+		transform: rotate(-90deg);
+	}
+
+	/* 折叠时：内容隐藏，底部留白缩减 */
+	.timeline-year-group.is-collapsed .timeline-items {
+		display: none;
+	}
+
+	.timeline-year-group.is-collapsed {
+		margin-bottom: 0.5rem;
 	}
 
 	.timeline-items {
@@ -241,16 +379,6 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		flex-direction: column;
 	}
 
-	.timeline-node {
-		display: none;
-	}
-
-	.timeline-year-badge {
-		padding-left: 0;
-		margin-bottom: 1.25rem;
-		font-size: 1.2rem;
-	}
-
 	@media (max-width: 640px) {
 		.timeline-items {
 			padding-left: 0;
@@ -259,14 +387,12 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 			gap: 2rem;
 		}
 
-		.timeline-node {
-			display: none;
+		.timeline-year-badge {
+			font-size: 1.1rem;
 		}
 
-		.timeline-year-badge {
-			padding-left: 0;
+		.timeline-year-header {
 			margin-bottom: 0.85rem;
-			font-size: 1.05rem;
 		}
 	}
 
@@ -439,5 +565,79 @@ const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
 		border-color: var(--accent);
 		background: rgba(9, 105, 218, 0.1);
 		font-weight: 600;
+	}
+
+	/* ================= 紧凑视图模式 (Compact Mode) ================= */
+	:global(html[data-view="compact"]) .timeline {
+		gap: 1.75rem;
+	}
+
+	:global(html[data-view="compact"]) .timeline-items {
+		gap: 0.45rem;
+	}
+
+	:global(html[data-view="compact"]) .timeline-cover-link,
+	:global(html[data-view="compact"]) .timeline-post-desc {
+		display: none !important;
+	}
+
+	:global(html[data-view="compact"]) .timeline-item {
+		padding: 0.45rem 0.6rem;
+		border-radius: var(--radius-sm);
+		transition: background-color 0.15s ease;
+	}
+
+	:global(html[data-view="compact"]) .timeline-item:hover {
+		background: var(--card-hover);
+	}
+
+	:global(html[data-view="compact"]) .timeline-content {
+		display: flex;
+		flex-direction: row;
+		align-items: baseline;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	:global(html[data-view="compact"]) .timeline-date {
+		flex-shrink: 0;
+		width: 88px;
+		font-size: 0.82rem;
+		color: var(--text-muted);
+	}
+
+	:global(html[data-view="compact"]) .timeline-post-title {
+		flex: 1 1 auto;
+		font-size: 1rem;
+		font-weight: 600;
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	:global(html[data-view="compact"]) .timeline-tags {
+		margin-top: 0;
+		margin-left: auto;
+		gap: 0.25rem;
+	}
+
+	:global(html[data-view="compact"]) .timeline-tag {
+		font-size: 0.7rem;
+		padding: 0.05rem 0.35rem;
+	}
+
+	@media (max-width: 640px) {
+		:global(html[data-view="compact"]) .timeline-content {
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		:global(html[data-view="compact"]) .timeline-date {
+			width: auto;
+			font-size: 0.75rem;
+		}
+
+		:global(html[data-view="compact"]) .timeline-tags {
+			margin-left: 0;
+		}
 	}
 </style>

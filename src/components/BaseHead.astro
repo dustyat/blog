@@ -72,7 +72,7 @@ const jsonLd = {
 />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Theme Init Script (Zero Flash) -->
+<!-- Theme & View Init Script (Zero Flash) -->
 <script is:inline>
 	const theme = (() => {
 		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -91,6 +91,11 @@ const jsonLd = {
 		document.documentElement.setAttribute('data-theme', 'white');
 	}
 	window.localStorage.setItem('theme', theme);
+
+	const viewMode = typeof localStorage !== 'undefined' ? localStorage.getItem('blog-view-mode') : null;
+	if (viewMode === 'compact') {
+		document.documentElement.setAttribute('data-view', 'compact');
+	}
 </script>
 
 <!-- Canonical URL -->
