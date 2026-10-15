@@ -294,11 +294,16 @@ p {
 	color: var(--text-color);
 }
 
-img {
+img,
+video {
 	max-width: 100%;
 	height: auto;
 	border-radius: var(--radius-sm);
 	display: block;
+}
+
+video {
+	width: 100%;
 }
 
 /* Article Prose Typography (舒适标准字号与行距，与主页高度统一) */
@@ -306,6 +311,16 @@ img {
 	font-size: 1rem; /* 16px 标准正文字号 */
 	line-height: 1.75;
 	color: var(--text-color);
+}
+
+.prose video,
+.prose iframe {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--radius-sm);
+	display: block;
+	margin: 1.25rem 0;
 }
 
 .prose p {
